@@ -14,7 +14,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd pdo pdo_sqlite
 
 # Enable Apache mod_rewrite and fix MPM issue
-RUN a2dismod mpm_event && a2enmod mpm_prefork && a2enmod rewrite
+RUN rm /etc/apache2/mods-enabled/mpm_* || true
+RUN a2enmod mpm_prefork && a2enmod rewrite
+
+# Fix port for Railway
+RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
 # Set working directory
 WORKDIR /var/www/html
