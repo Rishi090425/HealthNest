@@ -51,7 +51,7 @@ class InvoiceController extends Controller
         return redirect()->route('admin.invoices.index')->with('success', 'Invoice created successfully.');
     }
 
-    public function show(Invoice invoice)
+    public function show(Invoice $invoice)
     {
         $invoice->load(['patient.user', 'appointment.doctor.user', 'payments']);
         return view('admin.invoices.show', compact('invoice'));
