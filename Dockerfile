@@ -26,9 +26,12 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+
+# Create empty sqlite file if missing
+RUN touch /var/www/html/database/database.sqlite && chown www-data:www-data /var/www/html/database/database.sqlite
 
 # Update Apache config to serve from /public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -37,7 +40,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 
 # Set environment variables for production
 ENV APP_ENV=production
-ENV APP_DEBUG=false
+ENV APP_DEBUG=true 
+ENV LOG_CHANNEL=stderr
 
 # Expose port 80
 EXPOSE 80
