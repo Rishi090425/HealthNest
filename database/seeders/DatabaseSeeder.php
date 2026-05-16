@@ -48,6 +48,13 @@ class DatabaseSeeder extends Seeder
                 'experience_years' => 6, 'consultation_fee' => 500,
                 'bio' => 'Experienced general physician providing comprehensive primary healthcare.',
             ],
+            [
+                'name' => 'Dr. Stephy Mishra', 'email' => 'stephy.mishra@healthnest.com',
+                'phone' => '+91 98000 00005',
+                'specialization' => 'Physiotherapist', 'qualification' => 'MBBS',
+                'experience_years' => 5, 'consultation_fee' => 500,
+                'bio' => 'Experienced physiotherapist specializing in sports injuries and rehabilitation.',
+            ],
         ];
 
         $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
