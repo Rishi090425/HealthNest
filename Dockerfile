@@ -42,6 +42,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 ENV APP_ENV=production
 ENV APP_DEBUG=true 
 ENV LOG_CHANNEL=stderr
+ENV DB_CONNECTION=sqlite
+ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
 # Expose port 80
 EXPOSE 80
