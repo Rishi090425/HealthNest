@@ -13,8 +13,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_sqlite
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache mod_rewrite and fix MPM issue
+RUN a2dismod mpm_event && a2enmod mpm_prefork && a2enmod rewrite
 
 # Set working directory
 WORKDIR /var/www/html
