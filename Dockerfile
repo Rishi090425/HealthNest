@@ -1,4 +1,3 @@
-# Use the official PHP image with Apache
 FROM php:8.2-apache
 
 # Install system dependencies
@@ -13,12 +12,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_sqlite
 
-# Enable Apache mod_rewrite and fix MPM issue
-RUN rm /etc/apache2/mods-enabled/mpm_* || true
-RUN a2enmod mpm_prefork && a2enmod rewrite
-
-# Fix port for Railway
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
 # Set working directory
 WORKDIR /var/www/html
@@ -49,8 +44,11 @@ ENV LOG_CHANNEL=stderr
 ENV DB_CONNECTION=sqlite
 ENV DB_DATABASE=/var/www/html/database/database.sqlite
 
-# Expose port 80
+# Make start script executable
+RUN chmod +x /var/www/html/start.sh
+
+# Expose port
 EXPOSE 80
 
-# Start script to run migrations and start Apache
-CMD php artisan migrate --force && apache2-foreground
+# Start
+CMD ["/var/www/html/start.sh"]
