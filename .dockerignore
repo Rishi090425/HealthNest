@@ -1,0 +1,11 @@
+/vendor
+/node_modules
+.env
+.git
+.github
+tests
+Dockerfile
+.dockerignore
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/cache/*

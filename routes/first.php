@@ -1,0 +1,1 @@
+<h1> Student name is: {{$name}} and redid is {{$id}}</h1>
