@@ -6,5 +6,9 @@ sed -i "s/<VirtualHost \*:80>/<VirtualHost \*:${PORT:-8080}>/g" /etc/apache2/sit
 # Run migrations
 php artisan migrate --force
 
+# Explicitly disable conflicting MPMs (Common issue on Railway/Heroku)
+a2dismod mpm_event mpm_worker
+a2enmod mpm_prefork
+
 # Start Apache in foreground
 apache2-foreground
