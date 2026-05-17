@@ -37,14 +37,12 @@ RUN touch /var/www/html/database/database.sqlite \
     && chown www-data:www-data /var/www/html/database/database.sqlite \
     && chmod 664 /var/www/html/database/database.sqlite
 
-# Configure Apache to listen on the port provided by the environment (Render, Railway, etc.)
-# We modify ports.conf and 000-default.conf on the fly to use $PORT instead of 80.
-RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf
-RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:${PORT}>/g' /etc/apache2/sites-available/000-default.conf
+# Copy start script
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 # Expose port (Cloud providers override this with $PORT anyway)
-EXPOSE 80 8080
+EXPOSE 8080
 
 # Start script
-# We run migrations and then start Apache in the foreground
-CMD php artisan migrate --force && apache2-foreground
+CMD ["/usr/local/bin/start.sh"]
