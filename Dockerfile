@@ -35,7 +35,13 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && php artisan key:generate --force \
     && sed -i 's/APP_ENV=local/APP_ENV=production/' .env \
-    && sed -i 's/APP_DEBUG=true/APP_DEBUG=false/' .env
+    && sed -i 's/APP_DEBUG=false/APP_DEBUG=true/' .env \
+    && sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env \
+    && sed -i 's/^DB_HOST=/#DB_HOST=/' .env \
+    && sed -i 's/^DB_PORT=/#DB_PORT=/' .env \
+    && sed -i 's/^DB_DATABASE=/#DB_DATABASE=/' .env \
+    && sed -i 's/^DB_USERNAME=/#DB_USERNAME=/' .env \
+    && sed -i 's/^DB_PASSWORD=/#DB_PASSWORD=/' .env
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
@@ -56,4 +62,6 @@ CMD ["/bin/bash", "-c", \
      sed -i \"s/<VirtualHost \\*:[0-9]*>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-enabled/000-default.conf && \
      a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; \
      php artisan migrate --force && \
+     chown -R www-data:www-data /var/www/html/database /var/www/html/storage && \
+     chmod -R 775 /var/www/html/database /var/www/html/storage && \
      apache2-foreground"]
