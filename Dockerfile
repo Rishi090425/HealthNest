@@ -42,7 +42,7 @@ COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Expose port (Cloud providers override this with $PORT anyway)
-EXPOSE 8080
+EXPOSE 80
 
 # Start script
 CMD ["/usr/local/bin/start.sh"]
