@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     libsqlite3-dev \
     sqlite3 \
+    dos2unix \
     && docker-php-ext-install gd pdo pdo_sqlite pdo_mysql
 
 # Enable Apache mod_rewrite for Laravel routing
@@ -37,9 +38,9 @@ RUN touch /var/www/html/database/database.sqlite \
     && chown www-data:www-data /var/www/html/database/database.sqlite \
     && chmod 664 /var/www/html/database/database.sqlite
 
-# Copy start script
+# Copy start script and ensure LF line endings (fix Windows CRLF issue)
 COPY start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+RUN dos2unix /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
 # Expose port (Cloud providers override this with $PORT anyway)
 EXPOSE 80
