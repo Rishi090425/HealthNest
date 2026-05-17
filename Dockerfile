@@ -41,8 +41,8 @@ RUN touch /var/www/html/database/database.sqlite \
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-# Expose port (Cloud providers override this with $PORT anyway)
-EXPOSE 8080
+# Expose port 80 to match Apache's listening port
+EXPOSE 80
 
 # Start script
 CMD ["/usr/local/bin/start.sh"]
