@@ -29,7 +29,7 @@ COPY . .
 
 # Install Composer and dependencies
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --optimize-autoloader --no-interaction
 
 # Create .env from .env.example if .env is missing, then set production values
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
@@ -61,6 +61,9 @@ CMD ["/bin/bash", "-c", \
      printf 'Listen %s\\n<IfModule ssl_module>\\n  Listen 443\\n</IfModule>\\n' \"$PORT\" > /etc/apache2/ports.conf && \
      sed -i \"s/<VirtualHost \\*:[0-9]*>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-enabled/000-default.conf && \
      a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; \
+     php artisan key:generate --force && \
+     php artisan config:clear && \
+     php artisan cache:clear && \
      php artisan migrate --force && \
      chown -R www-data:www-data /var/www/html/database /var/www/html/storage && \
      chmod -R 775 /var/www/html/database /var/www/html/storage && \
