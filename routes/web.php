@@ -104,6 +104,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Audit Log
     Route::get('/audit-logs', [Admin\AuditLogController::class, 'index'])->name('audit-logs.index');
 
+    // User Management
+    Route::resource('users', Admin\UserController::class);
+
     // System Settings
     Route::get('/settings',  [Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [Admin\SettingController::class, 'update'])->name('settings.update');

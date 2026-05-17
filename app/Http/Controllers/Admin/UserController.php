@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::with('roles')
+        $users = User::query()
             ->when($request->role, fn($q) => $q->where('role', $request->role))
             ->when($request->search, fn($q) => $q->where(function($sq) use ($request) {
                 $sq->where('name', 'like', "%{$request->search}%")
