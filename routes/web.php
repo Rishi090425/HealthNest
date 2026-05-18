@@ -19,6 +19,21 @@ Route::get('/generate-models', function () {
     }
     return $out;
 });
+
+// Secure One-Click Database Seeding for Render Free Tier
+Route::get('/seed-database', function () {
+    if (\App\Models\User::where('role', 'admin')->exists()) {
+        return 'Database has already been seeded with an Administrator account!';
+    }
+    
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        return 'Database successfully seeded! <br><br><strong>Output:</strong><br>' . nl2br(\Illuminate\Support\Facades\Artisan::output());
+    } catch (\Exception $e) {
+        return 'Seeding failed: ' . $e->getMessage();
+    }
+});
+
 // Auth routes
 Route::middleware('guest')->group(function () {
     Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
