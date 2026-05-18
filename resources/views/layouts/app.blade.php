@@ -216,18 +216,18 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col min-h-screen md:ml-64">
         <!-- Topbar -->
-        <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
-            <div class="flex items-center gap-4">
-                <button id="sidebarToggle" class="md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        <header class="bg-white border-b border-gray-200 px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+                <button id="sidebarToggle" class="md:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0">
                     <i class="fas fa-bars text-xl"></i>
                 </button>
-                <h1 class="font-semibold text-gray-800 dark:text-gray-100 text-lg">@yield('page-title', 'Dashboard')</h1>
+                <h1 class="font-semibold text-gray-800 dark:text-gray-100 text-base md:text-lg truncate max-w-[180px] sm:max-w-none flex-1">@yield('page-title', 'Dashboard')</h1>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-4 flex-shrink-0">
                 <button id="darkModeToggle" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors" title="Toggle Dark Mode">
                     <i class="fas {{ auth()->user()?->preference?->dark_mode ? 'fa-sun' : 'fa-moon' }} text-lg"></i>
                 </button>
-                <div class="text-sm text-gray-500 dark:text-gray-400">
+                <div class="hidden sm:block text-sm text-gray-500 dark:text-gray-400">
                     <i class="fas fa-calendar-alt mr-1"></i>
                     {{ now()->format('D, d M Y') }}
                 </div>
@@ -235,7 +235,7 @@
         </header>
 
         <!-- Page content -->
-        <main class="flex-1 p-6 fade-in overflow-y-auto">
+        <main class="flex-1 p-4 md:p-6 fade-in overflow-y-auto">
             @if(session('success'))
                 <div id="flash-success" class="mb-4 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">
                     <i class="fas fa-check-circle text-green-500"></i>
@@ -356,7 +356,7 @@
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
              x-transition:leave-end="opacity-0 translate-y-10 scale-95"
-             class="absolute bottom-20 right-0 w-[350px] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
+             class="absolute bottom-20 right-0 w-[calc(100vw-2.5rem)] sm:w-[350px] bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
             
             <!-- Chat Header -->
             <div class="bg-primary-600 p-4 text-white flex items-center gap-3">

@@ -23,14 +23,14 @@
 <body class="bg-white">
     <!-- Navbar -->
     <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                     <i class="fas fa-heartbeat text-white text-sm"></i>
                 </div>
-                <span class="font-bold text-gray-800 text-lg">Health Nest</span>
+                <span class="font-bold text-gray-800 text-base sm:text-lg">Health Nest</span>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
                 @auth
                     @php
                         $dash = match(auth()->user()->role) {
@@ -39,33 +39,33 @@
                             default => route('patient.dashboard'),
                         };
                     @endphp
-                    <a href="{{ $dash }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Go to Dashboard</a>
+                    <a href="{{ $dash }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-colors">Go to Dashboard</a>
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-800 text-sm font-medium px-4 py-2">Sign In</a>
-                    <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Get Started</a>
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-800 text-xs sm:text-sm font-medium px-2 sm:px-4 py-1.5 sm:py-2">Sign In</a>
+                    <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-colors">Get Started</a>
                 @endauth
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="hero-bg pt-32 pb-24 px-6">
+    <section class="hero-bg pt-32 pb-24 px-4 sm:px-6">
         <div class="max-w-4xl mx-auto text-center">
-            <span class="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full mb-6 fade-up">✦ Modern Healthcare Management</span>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 fade-up delay-1">
+            <span class="inline-block bg-white/20 text-white text-[10px] sm:text-xs font-semibold px-3 py-1.5 rounded-full mb-6 fade-up">✦ Modern Healthcare Management</span>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6 fade-up delay-1">
                 Integrated Health<br>
                 <span class="text-blue-200">Nest</span>
             </h1>
-            <p class="text-blue-100 text-lg sm:text-xl max-w-2xl mx-auto mb-10 fade-up delay-2">
+            <p class="text-blue-100 text-sm sm:text-xl max-w-2xl mx-auto mb-10 fade-up delay-2">
                 A unified platform connecting patients, doctors, and administrators for seamless healthcare management.
             </p>
-            <div class="flex flex-wrap items-center justify-center gap-4 fade-up delay-3">
+            <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 fade-up delay-3 px-2">
                 <a href="{{ route('register') }}" id="get-started-btn"
-                    class="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-3.5 rounded-xl text-sm transition-colors shadow-lg">
+                    class="bg-white text-blue-700 hover:bg-blue-50 font-bold px-5 py-3 sm:px-8 sm:py-3.5 rounded-xl text-xs sm:text-sm transition-colors shadow-lg">
                     <i class="fas fa-rocket mr-2"></i>Get Started Free
                 </a>
                 <a href="{{ route('login') }}"
-                    class="border-2 border-white/40 text-white hover:bg-white/10 font-semibold px-8 py-3.5 rounded-xl text-sm transition-colors">
+                    class="border-2 border-white/40 text-white hover:bg-white/10 font-semibold px-5 py-3 sm:px-8 sm:py-3.5 rounded-xl text-xs sm:text-sm transition-colors">
                     <i class="fas fa-sign-in-alt mr-2"></i>Sign In
                 </a>
             </div>

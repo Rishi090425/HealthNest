@@ -3,7 +3,7 @@
 @section('page-title', 'Book Appointment')
 @section('content')
 <div class="max-w-2xl mx-auto">
-    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-8">
+    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 sm:p-8">
         <div class="flex items-center gap-3 mb-6">
             <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
                 <i class="fas fa-calendar-plus text-blue-600"></i>

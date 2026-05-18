@@ -31,7 +31,7 @@
             <p class="text-gray-500 text-sm mt-1">Integrated Health Nest</p>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 border border-gray-100">
+        <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-6 sm:p-8 border border-gray-100">
             @if(session('status'))
                 <div class="mb-4 text-sm font-medium text-green-600 bg-green-50 p-3 rounded-xl border border-green-200">
                     {{ session('status') }}

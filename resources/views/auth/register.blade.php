@@ -31,7 +31,7 @@
             <p class="text-gray-500 text-xs mt-1">Start your digital healthcare journey today</p>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 border border-gray-100">
+        <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-6 sm:p-8 border border-gray-100">
             <form method="POST" action="{{ route('register') }}" class="space-y-4">
                 @csrf
                 <input type="hidden" name="role" value="patient">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label for="password" class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Password</label>
                         <input type="password" name="password" id="password" required
