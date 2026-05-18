@@ -67,15 +67,15 @@ RUN touch /var/www/html/database/database.sqlite \
 EXPOSE 80
 
 # Inline startup: configure Apache to listen on $PORT, run migrations, and start
-CMD ["/bin/bash", "-c", \
-    "PORT=${PORT:-80} && \
-     printf 'Listen %s\\n<IfModule ssl_module>\\n  Listen 443\\n</IfModule>\\n' \"$PORT\" > /etc/apache2/ports.conf && \
-     sed -i \"s/<VirtualHost \\*:[0-9]*>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-enabled/000-default.conf && \
-     a2dismod mpm_event mpm_worker 2>/dev/null; a2enmod mpm_prefork 2>/dev/null; \
-     if [ -z \"\$APP_KEY\" ] && ! grep -q \"^APP_KEY=base64\" .env; then php artisan key:generate --force; fi && \
-     php artisan config:clear && \
-     php artisan cache:clear && \
-     php artisan migrate --force && \
-     chown -R www-data:www-data /var/www/html/database /var/www/html/storage && \
-     chmod -R 775 /var/www/html/database /var/www/html/storage && \
-     apache2-foreground"]
+CMD PORT=${PORT:-80} && \
+    printf 'Listen %s\n<IfModule ssl_module>\n  Listen 443\n</IfModule>\n' "$PORT" > /etc/apache2/ports.conf && \
+    sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-enabled/000-default.conf && \
+    a2dismod mpm_event mpm_worker 2>/dev/null || true; a2enmod mpm_prefork 2>/dev/null || true; \
+    if [ -z "$APP_KEY" ] && ! grep -q "^APP_KEY=base64" .env; then php artisan key:generate --force; fi && \
+    php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan migrate --force && \
+    chown -R www-data:www-data /var/www/html/database /var/www/html/storage && \
+    chmod -R 775 /var/www/html/database /var/www/html/storage && \
+    apache2-foreground
+
