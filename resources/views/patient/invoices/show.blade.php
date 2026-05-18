@@ -175,8 +175,12 @@
                     <div x-show="method === 'upi'" class="text-center space-y-4">
                         <p class="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{{ number_format($invoice->balance, 2) }}</p>
                         <div class="inline-block p-4 bg-white rounded-2xl shadow-sm border border-gray-100">
-                            {{-- Placeholder for User QR --}}
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=rishi.kumar14125@okaxis%26pn=HealthNest%26am={{ $invoice->balance }}%26cu=INR" 
+                            @php
+                                $upiId = \App\Models\Setting::get('upi_id', 'rishi.kumar14125@okaxis');
+                                $upiUrl = "upi://pay?pa=" . $upiId . "&pn=HealthNest&am=" . $invoice->balance . "&cu=INR";
+                                $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($upiUrl);
+                            @endphp
+                            <img src="{{ $qrCodeUrl }}" 
                                  alt="Payment QR" class="w-48 h-48">
                         </div>
                         <div class="flex flex-col gap-2">

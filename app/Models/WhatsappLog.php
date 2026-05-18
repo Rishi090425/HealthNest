@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class WhatsappLog extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'phone_number',
+        'message',
+        'status',
+        'message_id',
+    ];
 }

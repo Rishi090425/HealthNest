@@ -19,10 +19,10 @@ class WhatsappService
         Log::info("WHATSAPP SENT TO $to: $message");
 
         return WhatsappLog::create([
-            'to'      => $to,
-            'message' => $message,
-            'status'  => 'sent',
-            'provider'=> 'simulated'
+            'phone_number' => $to,
+            'message'      => $message,
+            'status'       => 'sent',
+            'message_id'   => 'simulated-' . uniqid()
         ]);
     }
 

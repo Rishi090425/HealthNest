@@ -54,6 +54,19 @@
                             <span class="text-xs font-medium px-2.5 py-0.5 rounded-full capitalize {{ $appt->status_badge }}">
                                 {{ $appt->status }}
                             </span>
+                            @if($appt->status === 'completed')
+                                @if($appt->invoice)
+                                    @if($appt->invoice->status === 'paid')
+                                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                            <i class="fas fa-check-circle mr-1"></i>Paid
+                                        </span>
+                                    @else
+                                        <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 animate-pulse">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>Payment Pending
+                                        </span>
+                                    @endif
+                                @endif
+                            @endif
                         </div>
                         <div class="text-xs text-gray-500 mt-1">
                             <i class="fas fa-calendar mr-1 text-blue-400"></i>{{ $appt->appointment_date->format('d M Y') }}

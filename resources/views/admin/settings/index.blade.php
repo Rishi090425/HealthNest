@@ -54,6 +54,20 @@
                 </div>
             </div>
 
+            {{-- Payments --}}
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+                    <i class="fas fa-wallet text-primary-500"></i> Payment Settings
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Hospital UPI ID (for Scanner/QR payments) *</label>
+                        <input type="text" name="upi_id" value="{{ $settings['upi_id'] ?? 'rishi.kumar14125@okaxis' }}" required
+                               class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
             {{-- Notifications --}}
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
                 <h3 class="font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">

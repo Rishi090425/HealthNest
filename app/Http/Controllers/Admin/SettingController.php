@@ -14,6 +14,7 @@ class SettingController extends Controller
         'appointment_reminder_hours', 'currency', 'logo_path',
         'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password',
         'appointment_reminder_template', 'cancellation_template',
+        'upi_id',
     ];
 
     public function index()

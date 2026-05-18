@@ -12,7 +12,7 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $patient = auth()->user()->patient;
-        $query   = Appointment::with('doctor.user')->where('patient_id', $patient->id);
+        $query   = Appointment::with('doctor.user', 'invoice.payments')->where('patient_id', $patient->id);
 
         if ($request->status) {
             $query->where('status', $request->status);
@@ -39,7 +39,7 @@ class AppointmentController extends Controller
 
         $patient = auth()->user()->patient;
 
-        Appointment::create([
+        $appointment = Appointment::create([
             'doctor_id'        => $validated['doctor_id'],
             'patient_id'       => $patient->id,
             'appointment_date' => $validated['appointment_date'],
@@ -47,6 +47,18 @@ class AppointmentController extends Controller
             'reason'           => $validated['reason'],
             'status'           => 'pending',
         ]);
+
+        // AUTOMATICALLY send WhatsApp confirmation that appointment is requested
+        try {
+            $name = $appointment->patient->user->name;
+            $doctorName = $appointment->doctor->user->name;
+            $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y');
+            $time = $appointment->appointment_time;
+            $msg = "Hello $name, your appointment request with Dr. $doctorName on $date at $time has been received and is pending approval. We will notify you once approved!";
+            \App\Services\WhatsappService::send($appointment->patient->user->phone ?? '9999999999', $msg);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send booking WhatsApp: " . $e->getMessage());
+        }
 
         return redirect()->route('patient.appointments.index')->with('success', 'Appointment booked successfully! Waiting for doctor approval.');
     }

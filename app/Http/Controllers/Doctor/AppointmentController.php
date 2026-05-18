@@ -11,7 +11,7 @@ class AppointmentController extends Controller
     public function index(Request $request)
     {
         $doctor = auth()->user()->doctor;
-        $query  = Appointment::with('patient.user')->where('doctor_id', $doctor->id);
+        $query  = Appointment::with('patient.user', 'invoice')->where('doctor_id', $doctor->id);
 
         if ($request->status) {
             $query->where('status', $request->status);
@@ -40,6 +40,14 @@ class AppointmentController extends Controller
     {
         $this->authorizeDoctor($appointment);
         $appointment->update(['status' => 'approved']);
+
+        // AUTOMATICALLY send WhatsApp message to the patient when appointment is approved!
+        try {
+            \App\Services\WhatsappService::sendAppointmentReminder($appointment);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to automatically send approval WhatsApp: " . $e->getMessage());
+        }
+
         return back()->with('success', "Appointment for {$appointment->patient->user->name} approved.");
     }
 
@@ -66,7 +74,7 @@ class AppointmentController extends Controller
 
         // Generate Invoice automatically if it doesn't exist
         $doctor = auth()->user()->doctor;
-        \App\Models\Invoice::firstOrCreate(
+        $invoice = \App\Models\Invoice::firstOrCreate(
             ['appointment_id' => $appointment->id],
             [
                 'patient_id' => $appointment->patient_id,
@@ -76,6 +84,17 @@ class AppointmentController extends Controller
                 'due_date'    => now()->addDays(7),
             ]
         );
+
+        // AUTOMATICALLY send WhatsApp invoice notification!
+        try {
+            $name = $appointment->patient->user->name;
+            $doctorName = $appointment->doctor->user->name;
+            $amount = $invoice->amount;
+            $msg = "Hello $name, your appointment with Dr. $doctorName has been marked as completed. An invoice of ₹$amount has been generated. Please complete your payment at: " . route('patient.appointments.index');
+            \App\Services\WhatsappService::send($appointment->patient->user->phone ?? '9999999999', $msg);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send completed WhatsApp: " . $e->getMessage());
+        }
 
         return back()->with('success', "Appointment marked as completed and Payment Request sent to Admin.");
     }
