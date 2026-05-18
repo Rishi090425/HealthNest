@@ -154,7 +154,7 @@
             <i class="fas fa-heartbeat text-blue-500"></i>
             <span class="text-white font-semibold">Health Nest</span>
         </div>
-        <p>© {{ date('Y') }} Health Nest. Built with Laravel &amp; Tailwind CSS.</p>
+        <p>&copy; {{ date('Y') }} Health Nest. All rights reserved.</p>
     </footer>
 </body>
 </html>
