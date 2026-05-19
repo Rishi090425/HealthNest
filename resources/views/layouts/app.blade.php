@@ -341,7 +341,71 @@
 </script>
     @auth
     @if(auth()->user()->role === 'patient')
-    <div x-data="{ open: false, messages: [{ role: 'bot', text: 'Hello! I am your Health Nest Assistant. How can I help you today?' }], input: '' }" class="fixed bottom-6 right-6 z-[60]">
+    <div x-data="{ 
+        open: false, 
+        messages: [{ role: 'bot', text: 'Hello! I am your Health Nest Assistant. How can I help you today?' }], 
+        input: '',
+        state: 'symptoms',
+        lastSpecialist: '',
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const box = document.getElementById('chat-messages');
+                if (box) box.scrollTop = box.scrollHeight;
+            });
+        },
+        sendMessage() {
+            if (!this.input.trim()) return;
+            const text = this.input.trim();
+            this.messages.push({ role: 'user', text: text });
+            this.input = '';
+            this.scrollToBottom();
+
+            if (this.state === 'confirm_booking') {
+                const userMsg = text.toLowerCase();
+                if (userMsg.includes('yes') || userMsg.includes('yep') || userMsg.includes('sure') || userMsg.includes('book') || userMsg.includes('ok') || userMsg.includes('ha')) {
+                    this.messages.push({ 
+                        role: 'bot', 
+                        text: 'Wonderful! 📅 <a href=\'/patient/appointments/create\' class=\'underline text-blue-600 font-bold hover:text-blue-800\'>Click here to book your appointment</a> with our ' + this.lastSpecialist + ' now!' 
+                    });
+                    this.state = 'symptoms';
+                } else if (userMsg.includes('no') || userMsg.includes('nope') || userMsg.includes('not') || userMsg.includes('na')) {
+                    this.messages.push({ 
+                        role: 'bot', 
+                        text: 'No problem at all! Let me know if you want to check any other symptoms.' 
+                    });
+                    this.state = 'symptoms';
+                } else {
+                    this.messages.push({ 
+                        role: 'bot', 
+                        text: 'Please reply with **Yes** to book an appointment, or **No** to search other symptoms.' 
+                    });
+                }
+                this.scrollToBottom();
+                return;
+            }
+
+            setTimeout(() => {
+                fetch('{{ route('symptom-checker.check') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    body: JSON.stringify({ message: text })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    this.messages.push({ role: 'bot', text: data.reply });
+                    if (data.specialist) {
+                        this.lastSpecialist = data.specialist;
+                        this.state = 'confirm_booking';
+                        this.messages.push({ 
+                            role: 'bot', 
+                            text: 'Would you like to schedule an appointment with our **' + data.specialist + '**? (Please reply with **Yes** or **No**)' 
+                        });
+                    }
+                    this.scrollToBottom();
+                });
+            }, 300);
+        }
+    }" class="fixed bottom-6 right-6 z-[60]">
         <!-- Chat Bubble Button -->
         <button @click="open = !open" class="w-14 h-14 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95">
             <i class="fas fa-comment-medical text-2xl" x-show="!open"></i>
@@ -375,7 +439,7 @@
                     <div :class="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
                         <div :class="msg.role === 'user' ? 'bg-primary-600 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200'"
                              class="max-w-[80%] px-4 py-2 rounded-2xl text-xs shadow-sm"
-                             x-text="msg.text">
+                             x-html="msg.text">
                         </div>
                     </div>
                 </template>
@@ -383,26 +447,8 @@
 
             <!-- Input Area -->
             <div class="p-4 border-t dark:border-gray-700 flex gap-2">
-                <input type="text" x-model="input" @keyup.enter="
-                    if(input.trim()) {
-                        messages.push({ role: 'user', text: input });
-                        const userMsg = input;
-                        input = '';
-                        setTimeout(() => {
-                            fetch('{{ route('symptom-checker.check') }}', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                                body: JSON.stringify({ message: userMsg })
-                            }).then(res => res.json()).then(data => {
-                                messages.push({ role: 'bot', text: data.reply });
-                                if(data.specialist) {
-                                    messages.push({ role: 'bot', text: 'You might want to see a ' + data.specialist + '. Would you like to book an appointment?' });
-                                }
-                            });
-                        }, 500);
-                    }
-                " placeholder="Ask about symptoms..." class="flex-1 bg-gray-100 dark:bg-gray-700 border-none rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none">
-                <button class="w-10 h-10 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-xl flex items-center justify-center">
+                <input type="text" x-model="input" @keyup.enter="sendMessage()" placeholder="Ask about symptoms..." class="flex-1 bg-gray-100 dark:bg-gray-700 border-none rounded-xl px-4 py-2 text-xs focus:ring-2 focus:ring-primary-500 focus:outline-none">
+                <button @click="sendMessage()" class="w-10 h-10 bg-primary-50 dark:bg-primary-900/30 text-primary-600 rounded-xl flex items-center justify-center">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
