@@ -18,6 +18,8 @@ class Appointment extends Model
         'reason',
         'notes',
         'video_room_id',
+        'payment_method',
+        'payment_transaction_id',
     ];
 
     protected $casts = [

@@ -35,6 +35,8 @@ class AppointmentController extends Controller
             'appointment_date' => 'required|date|after_or_equal:today',
             'appointment_time' => 'required',
             'reason'           => 'required|string|max:500',
+            'payment_method'   => 'required|in:cash,online',
+            'payment_transaction_id' => 'nullable|required_if:payment_method,online|string|max:100',
         ]);
 
         $patient = auth()->user()->patient;
@@ -46,6 +48,8 @@ class AppointmentController extends Controller
             'appointment_time' => $validated['appointment_time'],
             'reason'           => $validated['reason'],
             'status'           => 'pending',
+            'payment_method'   => $validated['payment_method'],
+            'payment_transaction_id' => $validated['payment_transaction_id'] ?? null,
         ]);
 
         // AUTOMATICALLY send WhatsApp confirmation that appointment is requested
