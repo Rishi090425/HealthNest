@@ -2,7 +2,65 @@
 @section('title', 'My Appointments')
 @section('page-title', 'My Appointments')
 @section('content')
-<div class="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+<div x-data="{ successAnim: false, successAmount: '0.00' }" class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 relative">
+    
+    {{-- Success Checkmark Overlay Style --}}
+    <style>
+        @keyframes scaleCircle {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        @keyframes drawCheck {
+            0% { stroke-dashoffset: 48; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .success-overlay {
+            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .animate-circle {
+            animation: scaleCircle 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .animate-check {
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: drawCheck 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+        }
+    </style>
+
+    {{-- Fullscreen Success Overlay --}}
+    <div x-show="successAnim" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 flex items-center justify-center success-overlay"
+         style="display: none;">
+        
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl text-center space-y-4 border border-gray-100 dark:border-gray-700/50 transform transition-all duration-300">
+            <!-- Success Check Icon -->
+            <div class="relative w-20 h-20 mx-auto flex items-center justify-center bg-green-50 dark:bg-green-950/30 rounded-full animate-circle">
+                <svg class="w-12 h-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            
+            <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Payment Done!</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Scan successful! Payment of <span class="font-bold text-gray-900 dark:text-white">₹<span x-text="successAmount"></span></span> has been verified. Your invoice is marked as PAID.</p>
+            
+            <div class="pt-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-[11px] font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
+                    Redirecting...
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-lg font-semibold text-gray-800">All Appointments</h2>
         <a href="{{ route('patient.appointments.create') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
@@ -84,12 +142,8 @@
                         <i class="fas fa-wallet text-primary-500"></i> Choose Payment Option for ₹{{ number_format($appt->invoice->balance, 2) }}
                     </h4>
                     
-                    {{-- 5 Payment Options tabs --}}
-                    <div class="grid grid-cols-5 gap-1.5 sm:gap-2">
-                        <button type="button" @click="method = 'online'" :class="method === 'online' ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20 border-primary-500' : 'border-gray-200 dark:border-gray-700'" class="flex flex-col items-center justify-center p-2 rounded-lg border transition-all">
-                            <i class="fas fa-credit-card text-xs sm:text-sm mb-1" :class="method === 'online' ? 'text-primary-600' : 'text-gray-400'"></i>
-                            <span class="text-[9px] font-bold truncate max-w-full" :class="method === 'online' ? 'text-primary-700' : 'text-gray-500'">Online</span>
-                        </button>
+                    {{-- 4 Payment Options tabs (Razorpay removed) --}}
+                    <div class="grid grid-cols-4 gap-1.5 sm:gap-2">
                         <button type="button" @click="method = 'upi'" :class="method === 'upi' ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20 border-primary-500' : 'border-gray-200 dark:border-gray-700'" class="flex flex-col items-center justify-center p-2 rounded-lg border transition-all">
                             <i class="fas fa-qrcode text-xs sm:text-sm mb-1" :class="method === 'upi' ? 'text-primary-600' : 'text-gray-400'"></i>
                             <span class="text-[9px] font-bold truncate max-w-full" :class="method === 'upi' ? 'text-primary-700' : 'text-gray-500'">Scanner</span>
@@ -110,63 +164,6 @@
 
                     {{-- Dynamic method panel container --}}
                     <div class="bg-gray-50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100 dark:border-gray-700/50">
-                        
-                        {{-- Online Payment --}}
-                        <div x-show="method === 'online'" class="text-center space-y-2 py-1">
-                            <h5 class="text-xs font-bold text-gray-800 dark:text-gray-200">Secure Online Payment</h5>
-                            <p class="text-[10px] text-gray-400">Instantly pay using Credit/Debit cards, UPI, or Net Banking via Razorpay.</p>
-                            <button type="button" id="rzp-btn-{{ $appt->id }}" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 rounded-lg text-xs shadow-sm flex items-center justify-center gap-1.5 transition-colors">
-                                <i class="fas fa-lock"></i> PAY ₹{{ number_format($appt->invoice->balance, 2) }} NOW
-                            </button>
-                            
-                            <script>
-                                document.getElementById('rzp-btn-{{ $appt->id }}').onclick = function(e) {
-                                    e.preventDefault();
-                                    fetch("{{ route('patient.razorpay.order', $appt->invoice) }}", {
-                                        method: 'POST',
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                            'Content-Type': 'application/json'
-                                        }
-                                    }).then(res => res.json()).then(data => {
-                                        if (data.error) { alert("Error: " + data.error); return; }
-                                        var options = {
-                                            "key": data.key_id,
-                                            "amount": data.amount,
-                                            "currency": "INR",
-                                            "name": "Health Nest",
-                                            "description": "Appointment Payment #{{ str_pad($appt->invoice->id, 5, '0', STR_PAD_LEFT) }}",
-                                            "order_id": data.order_id,
-                                            "handler": function (response){
-                                                fetch("{{ route('patient.razorpay.verify', $appt->invoice) }}", {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                                        'Content-Type': 'application/json'
-                                                    },
-                                                    body: JSON.stringify({
-                                                        razorpay_payment_id: response.razorpay_payment_id,
-                                                        razorpay_order_id: response.razorpay_order_id,
-                                                        razorpay_signature: response.razorpay_signature
-                                                    })
-                                                }).then(res => res.json()).then(data => {
-                                                    if(data.success) { window.location.reload(); }
-                                                    else { alert("Verification Failed: " + data.error); }
-                                                });
-                                            },
-                                            "prefill": {
-                                                "name": data.name,
-                                                "email": data.email,
-                                                "contact": data.phone
-                                            },
-                                            "theme": { "color": "#2563eb" }
-                                        };
-                                        var rzp1 = new Razorpay(options);
-                                        rzp1.open();
-                                    });
-                                }
-                            </script>
-                        </div>
 
                         {{-- Scanner / UPI (FIXED PARSING GENERATOR) --}}
                         <div x-show="method === 'upi'" class="text-center space-y-3">
@@ -182,7 +179,9 @@
                                 <img src="{{ $qrCodeUrl }}" alt="Payment QR" class="w-36 h-36 mx-auto">
                             </div>
 
-                            <form method="POST" action="{{ route('patient.invoices.pay', $appt->invoice) }}" class="space-y-2">
+                            <form method="POST" action="{{ route('patient.invoices.pay', $appt->invoice) }}" 
+                                  @submit.prevent="successAmount = '{{ number_format($appt->invoice->balance, 2) }}'; successAnim = true; const form = $event.target; setTimeout(() => form.submit(), 2200)"
+                                  class="space-y-2">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="upi">
                                 <input type="hidden" name="amount" value="{{ $appt->invoice->balance }}">
@@ -255,6 +254,4 @@
 </div>
 @endsection
 
-@section('scripts')
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-@endsection
+

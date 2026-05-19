@@ -70,13 +70,67 @@
                 Choose Payment Method
             </h3>
 
-            <div x-data="{ method: 'upi' }" class="space-y-6">
+            <div x-data="{ successAnim: false, successAmount: '{{ number_format($invoice->balance, 2) }}', method: 'upi' }" class="space-y-6 relative">
+                
+                {{-- Success Checkmark Overlay Style --}}
+                <style>
+                    @keyframes scaleCircle {
+                        0% { transform: scale(0); opacity: 0; }
+                        50% { transform: scale(1.1); opacity: 1; }
+                        70% { transform: scale(0.95); }
+                        100% { transform: scale(1); }
+                    }
+                    @keyframes drawCheck {
+                        0% { stroke-dashoffset: 48; }
+                        100% { stroke-dashoffset: 0; }
+                    }
+                    .success-overlay {
+                        backdrop-filter: blur(8px);
+                        background: rgba(15, 23, 42, 0.6);
+                    }
+                    .animate-circle {
+                        animation: scaleCircle 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                    }
+                    .animate-check {
+                        stroke-dasharray: 48;
+                        stroke-dashoffset: 48;
+                        animation: drawCheck 0.5s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+                    }
+                </style>
+
+                {{-- Fullscreen Success Overlay --}}
+                <div x-show="successAnim" 
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="fixed inset-0 z-50 flex items-center justify-center success-overlay"
+                     style="display: none;">
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl text-center space-y-4 border border-gray-100 dark:border-gray-700/50 transform transition-all duration-300">
+                        <!-- Success Check Icon -->
+                        <div class="relative w-20 h-20 mx-auto flex items-center justify-center bg-green-50 dark:bg-green-950/30 rounded-full animate-circle">
+                            <svg class="w-12 h-12 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Payment Done!</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Scan successful! Payment of <span class="font-bold text-gray-900 dark:text-white">₹<span x-text="successAmount"></span></span> has been verified. Your invoice is marked as PAID.</p>
+                        
+                        <div class="pt-2">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-[11px] font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
+                                Redirecting...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Method Selection Icons --}}
-                <div class="grid grid-cols-5 gap-3">
-                    <button @click="method = 'online'" :class="method === 'online' ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20 border-primary-500' : 'border-gray-200 dark:border-gray-700'" class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all">
-                        <i class="fas fa-credit-card text-lg mb-1" :class="method === 'online' ? 'text-primary-600' : 'text-gray-400'"></i>
-                        <span class="text-[10px] font-bold" :class="method === 'online' ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500'">Online</span>
-                    </button>
+                <div class="grid grid-cols-4 gap-3">
                     <button @click="method = 'upi'" :class="method === 'upi' ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20 border-primary-500' : 'border-gray-200 dark:border-gray-700'" class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all">
                         <i class="fas fa-qrcode text-lg mb-1" :class="method === 'upi' ? 'text-primary-600' : 'text-gray-400'"></i>
                         <span class="text-[10px] font-bold" :class="method === 'upi' ? 'text-primary-700 dark:text-primary-300' : 'text-gray-500'">Scanner</span>
@@ -98,79 +152,6 @@
                 {{-- Payment Views --}}
                 <div class="bg-gray-50 dark:bg-gray-900/40 rounded-2xl p-6 border border-gray-100 dark:border-gray-700/50">
                     
-                    {{-- Online View (Razorpay) --}}
-                    <div x-show="method === 'online'" class="text-center space-y-4 py-4">
-                        <div class="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <i class="fas fa-shield-alt text-2xl"></i>
-                        </div>
-                        <h4 class="font-bold text-gray-800 dark:text-gray-200">Secure Online Payment</h4>
-                        <p class="text-sm text-gray-500 px-4">Pay safely using your Credit/Debit Card, Net Banking, or UPI via Razorpay.</p>
-                        
-                        <button id="rzp-button" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary-900/20 transition-all flex items-center justify-center gap-2">
-                            <i class="fas fa-lock"></i>
-                            PAY ₹{{ number_format($invoice->balance, 2) }} NOW
-                        </button>
-                        
-                        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-                        <script>
-                            document.getElementById('rzp-button').onclick = function(e) {
-                                e.preventDefault();
-                                
-                                fetch("{{ route('patient.razorpay.order', $invoice) }}", {
-                                    method: 'POST',
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'Content-Type': 'application/json'
-                                    }
-                                }).then(res => res.json()).then(data => {
-                                    if (data.error) {
-                                        alert("Error: " + data.error);
-                                        return;
-                                    }
-
-                                    var options = {
-                                        "key": data.key_id,
-                                        "amount": data.amount,
-                                        "currency": "INR",
-                                        "name": "Health Nest",
-                                        "description": "Invoice Payment #{{ str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}",
-                                        "order_id": data.order_id,
-                                        "handler": function (response){
-                                            fetch("{{ route('patient.razorpay.verify', $invoice) }}", {
-                                                method: 'POST',
-                                                headers: {
-                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({
-                                                    razorpay_payment_id: response.razorpay_payment_id,
-                                                    razorpay_order_id: response.razorpay_order_id,
-                                                    razorpay_signature: response.razorpay_signature
-                                                })
-                                            }).then(res => res.json()).then(data => {
-                                                if(data.success) {
-                                                    window.location.reload();
-                                                } else {
-                                                    alert("Verification Failed: " + data.error);
-                                                }
-                                            });
-                                        },
-                                        "prefill": {
-                                            "name": data.name,
-                                            "email": data.email,
-                                            "contact": data.phone
-                                        },
-                                        "theme": {
-                                            "color": "#2563eb"
-                                        }
-                                    };
-                                    var rzp1 = new Razorpay(options);
-                                    rzp1.open();
-                                });
-                            }
-                        </script>
-                    </div>
-
                     {{-- UPI / Scanner View --}}
                     <div x-show="method === 'upi'" class="text-center space-y-4">
                         <p class="text-xs text-gray-500 mb-2 font-medium">Scan QR to pay ₹{{ number_format($invoice->balance, 2) }}</p>
@@ -184,7 +165,8 @@
                                  alt="Payment QR" class="w-48 h-48">
                         </div>
                         <div class="flex flex-col gap-2">
-                            <form method="POST" action="{{ route('patient.invoices.pay', $invoice) }}">
+                            <form method="POST" action="{{ route('patient.invoices.pay', $invoice) }}"
+                                  @submit.prevent="successAnim = true; const form = $event.target; setTimeout(() => form.submit(), 2200)">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="upi">
                                 <input type="hidden" name="amount" value="{{ $invoice->balance }}">
@@ -193,7 +175,6 @@
                                     I HAVE PAID (CONFIRM)
                                 </button>
                             </form>
-                            <p class="text-[10px] text-gray-400 italic">This is a manual confirmation. Real online payment is available in the "Online" tab.</p>
                         </div>
                     </div>
 
