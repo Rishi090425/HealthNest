@@ -148,117 +148,158 @@ class DatabaseSeeder extends Seeder
             $doctors[] = $doctor;
         }
 
-        // ─── Patients ─────────────────────────────────────────────────────
-        $patientData = [
-            ['name' => 'John Patient', 'email' => 'patient@healthcare.com', 'gender' => 'male', 'blood_group' => 'O+', 'dob' => '1990-05-15'],
-            ['name' => 'Sara Wilson', 'email' => 'sara@healthcare.com', 'gender' => 'female', 'blood_group' => 'A+', 'dob' => '1985-08-22'],
-            ['name' => 'Amit Kumar', 'email' => 'amit@healthcare.com', 'gender' => 'male', 'blood_group' => 'B+', 'dob' => '1992-03-10'],
-            ['name' => 'Priya Gupta', 'email' => 'priyag@healthcare.com', 'gender' => 'female', 'blood_group' => 'AB-', 'dob' => '1988-11-30'],
-            ['name' => 'Ravi Singh', 'email' => 'ravi@healthcare.com', 'gender' => 'male', 'blood_group' => 'O-', 'dob' => '1975-07-04'],
-            ['name' => 'Neha Joshi', 'email' => 'neha@healthcare.com', 'gender' => 'female', 'blood_group' => 'A-', 'dob' => '1998-01-18'],
-            ['name' => 'Vikram Das', 'email' => 'vikram@healthcare.com', 'gender' => 'male', 'blood_group' => 'B-', 'dob' => '1983-09-25'],
-            ['name' => 'Meera Nair', 'email' => 'meera@healthcare.com', 'gender' => 'female', 'blood_group' => 'O+', 'dob' => '1995-06-12'],
-            ['name' => 'Suresh Rao', 'email' => 'suresh@healthcare.com', 'gender' => 'male', 'blood_group' => 'A+', 'dob' => '1970-04-08'],
-            ['name' => 'Kavya Reddy', 'email' => 'kavya@healthcare.com', 'gender' => 'female', 'blood_group' => 'AB+', 'dob' => '2000-12-20'],
+        // ─── Patients, Appointments, and Invoices Seeding ─────────────────
+        $patientNames = [
+            'Aarav Patel', 'Vihaan Sharma', 'Aditya Verma', 'Muhammad Khan', 'Arjun Gupta',
+            'Sai Prasad', 'Reyansh Malhotra', 'Krishna Das', 'Ishaan Nair', 'Shaurya Sen',
+            'Diya Joshi', 'Ananya Roy', 'Pari Saxena', 'Anika Bose', 'Aadhya Iyer',
+            'Peehu Choudhury', 'Kavya Pillai', 'Saanvi Hegde', 'Riya Reddy', 'Angel Fernandez',
+            'Rahul Singhal', 'Amit Trivedi', 'Sanjay Dutt', 'Rohan Gavaskar', 'Vijay Kapoor',
+            'Priyanka Chopra', 'Deepika Padukone', 'Alia Bhatt', 'Kareena Kapoor', 'Katrina Kaif',
+            'Karan Johar', 'Ranbir Kapoor', 'Varun Dhawan', 'Sidharth Malhotra', 'Ayushmann Khurrana',
+            'Shraddha Kapoor', 'Kriti Sanon', 'Kiara Advani', 'Sara Ali Khan', 'Janhvi Kapoor'
         ];
 
-        $patients = [];
-        foreach ($patientData as $data) {
-            $user = User::create([
-                'name' => $data['name'], 'email' => $data['email'],
-                'password' => Hash::make('password'),
-                'role' => 'patient', 'phone' => '+91 9' . rand(100000000, 999999999), 'status' => 'active',
-            ]);
-
-            $patients[] = Patient::create([
-                'user_id'       => $user->id,
-                'date_of_birth' => $data['dob'],
-                'gender'        => $data['gender'],
-                'blood_group'   => $data['blood_group'],
-                'address'       => rand(1, 100) . ', Sample Street, City - ' . rand(100000, 999999),
-                'medical_history' => collect(['Hypertension', 'Diabetes Type 2', 'None', 'Asthma', 'Thyroid disorder'])->random(),
-                'emergency_contact_name'  => 'Emergency Contact',
-                'emergency_contact_phone' => '+91 9' . rand(100000000, 999999999),
-            ]);
-        }
-
-        // ─── Appointments ─────────────────────────────────────────────────
-        $statuses   = ['pending', 'approved', 'completed', 'cancelled'];
-        $times      = ['09:00', '09:30', '10:00', '10:30', '11:00', '14:00', '14:30', '15:00', '16:00'];
-        $reasons    = [
-            'Chest pain and shortness of breath', 'Regular check-up', 'Headache and dizziness',
-            'Follow-up consultation', 'Fever and body ache', 'Blood pressure monitoring',
-            'Joint pain in knees', 'Skin rash and itching', 'Stomach pain', 'Eye strain and headache',
+        $bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+        $genders = ['male', 'female'];
+        $reasons = [
+            'Regular medical check-up', 'Sudden fever and headache', 'Consultation for stomach pain',
+            'Blood pressure monitoring', 'Skin allergy and rash check', 'Knee joint pain relief',
+            'Eye strain assessment', 'Routine dental cleaning', 'ENT throat allergy follow-up',
+            'Anxiety and sleep management'
         ];
 
-        $appointments = [];
-        for ($i = 0; $i < 20; $i++) {
-            $status = $statuses[array_rand($statuses)];
-            $date   = $status === 'completed'
-                ? now()->subDays(rand(1, 30))
-                : now()->addDays(rand(0, 20));
-
-            $appt = Appointment::create([
-                'doctor_id'        => $doctors[array_rand($doctors)]->id,
-                'patient_id'       => $patients[array_rand($patients)]->id,
-                'appointment_date' => $date->format('Y-m-d'),
-                'appointment_time' => $times[array_rand($times)],
-                'status'           => $status,
-                'reason'           => $reasons[array_rand($reasons)],
-            ]);
-            $appointments[] = $appt;
-        }
-
-        // ─── Specific Appointments for doctor@healthcare.com ──────────────
-        for ($i = 0; $i < 4; $i++) {
-            $appt = Appointment::create([
-                'doctor_id'        => $doctors[0]->id, // Dr. Aanya Sharma
-                'patient_id'       => $patients[array_rand($patients)]->id,
-                'appointment_date' => now()->addDays(rand(1, 5))->format('Y-m-d'),
-                'appointment_time' => $times[array_rand($times)],
-                'status'           => 'approved',
-                'reason'           => 'Specific testing appointment ' . $i,
-            ]);
-            $appointments[] = $appt;
-        }
-        
-        // Add one pending for doctor@healthcare.com
-        $appointments[] = Appointment::create([
-            'doctor_id'        => $doctors[0]->id,
-            'patient_id'       => $patients[array_rand($patients)]->id,
-            'appointment_date' => now()->addDays(rand(1, 5))->format('Y-m-d'),
-            'appointment_time' => '10:00',
-            'status'           => 'pending',
-            'reason'           => 'Pending test appointment',
-        ]);
-
-        // ─── Consultations for completed appointments ───────────────────
         $diagnoses = [
-            'Hypertensive crisis — BP 160/100 mmHg',
-            'Viral upper respiratory tract infection',
-            'Tension-type headache, likely stress-related',
-            'Type 2 Diabetes — HbA1c elevated at 8.2%',
-            'Mild gastritis, no ulceration on endoscopy',
+            'Mild hypertension detected', 'Acute viral nasopharyngitis', 'Gastroenteritis',
+            'Vitamin D deficiency', 'Allergic dermatitis', 'Mild knee osteoarthritis'
         ];
+        
         $treatments = [
-            'Prescribed Amlodipine 5mg OD. Lifestyle modification advised.',
-            'Rest, fluids, Paracetamol 500mg TDS for 5 days.',
-            'Ibuprofen 400mg PRN, stress management, follow-up in 2 weeks.',
-            'Metformin 500mg BD, diet chart provided, repeat HbA1c in 3 months.',
-            'Pantoprazole 40mg OD for 4 weeks, avoid spicy food.',
+            'Advised daily exercise and low salt diet.', 'Paracetamol 500mg as needed, rest and hydration.',
+            'ORS fluids and light diet for 3 days.', 'Vitamin D3 60k weekly for 8 weeks.',
+            'Loratadine 10mg daily for 5 days.', 'Physiotherapy sessions twice a week.'
         ];
 
-        foreach ($appointments as $appt) {
-            if ($appt->status === 'completed') {
-                $idx = array_rand($diagnoses);
-                Consultation::create([
-                    'appointment_id' => $appt->id,
-                    'diagnosis'      => $diagnoses[$idx],
-                    'treatment'      => $treatments[$idx],
-                    'notes'          => 'Patient advised to monitor vitals daily and return if symptoms worsen.',
-                    'follow_up_date' => now()->addDays(rand(7, 30))->format('Y-m-d'),
+        $patientIndex = 0;
+        $patients = [];
+
+        foreach ($doctors as $doctor) {
+            // Create 3 patients for each doctor
+            $docPatients = [];
+            for ($p = 0; $p < 3; $p++) {
+                $name = $patientNames[$patientIndex % count($patientNames)];
+                $email = 'patient.' . strtolower(str_replace(' ', '', $name)) . '.' . $doctor->id . $p . '@healthnest.com';
+                $gender = $genders[$patientIndex % count($genders)];
+                $bloodGroup = $bloodGroups[$patientIndex % count($bloodGroups)];
+                $dob = now()->subYears(rand(18, 65))->subDays(rand(1, 365))->format('Y-m-d');
+                $patientIndex++;
+
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make('12345678'),
+                    'role' => 'patient',
+                    'phone' => '+91 ' . rand(7000000000, 9999999999),
+                    'status' => 'active',
                 ]);
+
+                $patient = Patient::create([
+                    'user_id' => $user->id,
+                    'date_of_birth' => $dob,
+                    'gender' => $gender,
+                    'blood_group' => $bloodGroup,
+                    'address' => rand(1, 150) . ', MG Road, Sector ' . rand(1, 15) . ', New Delhi',
+                    'medical_history' => collect(['None', 'Mild Asthma', 'Thyroid', 'Gastric'])->random(),
+                    'emergency_contact_name' => 'Spouse/Parent',
+                    'emergency_contact_phone' => '+91 ' . rand(7000000000, 9999999999),
+                ]);
+
+                $docPatients[] = $patient;
+                $patients[] = $patient;
             }
+
+            // 1. Create a Pending Appointment (Patient 1)
+            Appointment::create([
+                'doctor_id' => $doctor->id,
+                'patient_id' => $docPatients[0]->id,
+                'appointment_date' => now()->addDays(rand(1, 10))->format('Y-m-d'),
+                'appointment_time' => '10:00',
+                'status' => 'pending',
+                'reason' => $reasons[array_rand($reasons)],
+            ]);
+
+            // 2. Create an Approved Appointment (Patient 2)
+            Appointment::create([
+                'doctor_id' => $doctor->id,
+                'patient_id' => $docPatients[1]->id,
+                'appointment_date' => now()->addDays(rand(1, 10))->format('Y-m-d'),
+                'appointment_time' => '11:30',
+                'status' => 'approved',
+                'reason' => $reasons[array_rand($reasons)],
+            ]);
+
+            // 3. Create a Completed Appointment with PENDING FEE / UNPAID INVOICE (Patient 3)
+            $apptCompletedUnpaid = Appointment::create([
+                'doctor_id' => $doctor->id,
+                'patient_id' => $docPatients[2]->id,
+                'appointment_date' => now()->subDays(rand(1, 5))->format('Y-m-d'),
+                'appointment_time' => '14:00',
+                'status' => 'completed',
+                'reason' => $reasons[array_rand($reasons)],
+            ]);
+
+            $diagIdx = array_rand($diagnoses);
+            Consultation::create([
+                'appointment_id' => $apptCompletedUnpaid->id,
+                'diagnosis' => $diagnoses[$diagIdx],
+                'treatment' => $treatments[$diagIdx],
+                'notes' => 'Follow up in one week.',
+                'follow_up_date' => now()->addDays(7)->format('Y-m-d'),
+            ]);
+
+            \App\Models\Invoice::create([
+                'patient_id' => $docPatients[2]->id,
+                'appointment_id' => $apptCompletedUnpaid->id,
+                'amount' => $doctor->consultation_fee ?? 500,
+                'status' => 'unpaid',
+                'issued_date' => now()->subDays(1),
+                'due_date' => now()->addDays(6),
+            ]);
+
+            // 4. Create a Completed Appointment with PAID FEE / PAID INVOICE (Patient 1)
+            $apptCompletedPaid = Appointment::create([
+                'doctor_id' => $doctor->id,
+                'patient_id' => $docPatients[0]->id,
+                'appointment_date' => now()->subDays(rand(6, 15))->format('Y-m-d'),
+                'appointment_time' => '15:30',
+                'status' => 'completed',
+                'reason' => $reasons[array_rand($reasons)],
+            ]);
+
+            Consultation::create([
+                'appointment_id' => $apptCompletedPaid->id,
+                'diagnosis' => 'Routine follow up checkup.',
+                'treatment' => 'Continue previous prescription.',
+                'notes' => 'Health condition stable.',
+                'follow_up_date' => now()->addDays(30)->format('Y-m-d'),
+            ]);
+
+            $invoicePaid = \App\Models\Invoice::create([
+                'patient_id' => $docPatients[0]->id,
+                'appointment_id' => $apptCompletedPaid->id,
+                'amount' => $doctor->consultation_fee ?? 500,
+                'status' => 'paid',
+                'issued_date' => now()->subDays(10),
+                'due_date' => now()->subDays(3),
+            ]);
+
+            \App\Models\Payment::create([
+                'invoice_id' => $invoicePaid->id,
+                'amount' => $doctor->consultation_fee ?? 500,
+                'payment_method' => 'online',
+                'transaction_id' => 'TXN' . rand(100000000, 999999999),
+                'payment_date' => now()->subDays(10),
+            ]);
         }
 
         // ─── Complaints ───────────────────────────────────────────────────
