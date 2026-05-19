@@ -62,32 +62,19 @@ class DoctorController extends Controller
             'consultation_fee' => $validated['consultation_fee'] ?? 0,
         ]);
 
-        // Send Credentials Email
-        $emailSent = true;
+        // Dispatch notifications in the background to prevent page hangs/timeouts!
         try {
-            \Illuminate\Support\Facades\Mail::to($user->email)->send(
-                new \App\Mail\DoctorCredentialsMail($user->name, $user->email, $validated['password'])
-            );
+            $cmd = "php " . base_path('artisan') . " doctor:send-credentials " . escapeshellarg($user->id) . " " . escapeshellarg($validated['password']);
+            if (substr(php_uname(), 0, 7) == "Windows") {
+                pclose(popen("start /B " . $cmd, "r"));
+            } else {
+                exec($cmd . " > /dev/null 2>&1 &");
+            }
         } catch (\Exception $e) {
-            $emailSent = false;
-            \Illuminate\Support\Facades\Log::error('Email failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error("Failed to trigger background credentials: " . $e->getMessage());
         }
 
-        // Send Credentials via WhatsApp
-        try {
-            $loginUrl = url('/login');
-            $docDisplayName = preg_match('/^(Dr\.?|Doctor)\s+/i', $user->name) ? $user->name : "Dr. " . $user->name;
-            $msg = "Hello {$docDisplayName}, your professional account at Health Nest has been successfully created. You can log in using: Link: {$loginUrl} | Email: {$user->email} | Password: {$validated['password']}";
-            \App\Services\WhatsappService::send($user->phone ?? '9999999999', $msg);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('WhatsApp credentials failed: ' . $e->getMessage());
-        }
-
-        $successMsg = $emailSent 
-            ? 'Doctor added successfully and credentials sent to email & WhatsApp.'
-            : 'Doctor added successfully (WhatsApp sent, but Email failed to deliver — please check mail configuration).';
-
-        return redirect()->route('admin.doctors.index')->with('success', $successMsg);
+        return redirect()->route('admin.doctors.index')->with('success', 'Doctor added successfully! Credentials are being sent in the background.');
     }
 
     public function edit(Doctor $doctor)

@@ -30,7 +30,7 @@ class WhatsappService
         $ultraMsgToken = env('ULTRAMSG_TOKEN');
         if ($ultraMsgInstance && $ultraMsgToken) {
             try {
-                $response = Http::post("https://api.ultramsg.com/{$ultraMsgInstance}/messages/chat", [
+                $response = Http::timeout(5)->post("https://api.ultramsg.com/{$ultraMsgInstance}/messages/chat", [
                     'token' => $ultraMsgToken,
                     'to'    => $cleanPhone,
                     'body'  => $message
@@ -58,7 +58,7 @@ class WhatsappService
                 // Format destination for Twilio
                 $twilioTo = str_starts_with($cleanPhone, 'whatsapp:') ? $cleanPhone : "whatsapp:{$cleanPhone}";
                 
-                $response = Http::withBasicAuth($twilioSid, $twilioToken)
+                $response = Http::timeout(5)->withBasicAuth($twilioSid, $twilioToken)
                     ->asForm()
                     ->post("https://api.twilio.com/2010-04-01/Accounts/{$twilioSid}/Messages.json", [
                         'To'   => $twilioTo,
