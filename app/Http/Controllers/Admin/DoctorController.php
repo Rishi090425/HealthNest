@@ -60,16 +60,30 @@ class DoctorController extends Controller
         ]);
 
         // Send Credentials Email
+        $emailSent = true;
         try {
             \Illuminate\Support\Facades\Mail::to($user->email)->send(
                 new \App\Mail\DoctorCredentialsMail($user->name, $user->email, $validated['password'])
             );
         } catch (\Exception $e) {
-            // Log error but continue (account is created)
+            $emailSent = false;
             \Illuminate\Support\Facades\Log::error('Email failed: ' . $e->getMessage());
         }
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor added successfully and credentials sent to email.');
+        // Send Credentials via WhatsApp
+        try {
+            $loginUrl = url('/login');
+            $msg = "Hello Dr. {$user->name}, your professional account at Health Nest has been successfully created. You can log in using: Link: {$loginUrl} | Email: {$user->email} | Password: {$validated['password']}";
+            \App\Services\WhatsappService::send($user->phone ?? '9999999999', $msg);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WhatsApp credentials failed: ' . $e->getMessage());
+        }
+
+        $successMsg = $emailSent 
+            ? 'Doctor added successfully and credentials sent to email & WhatsApp.'
+            : 'Doctor added successfully (WhatsApp sent, but Email failed to deliver — please check mail configuration).';
+
+        return redirect()->route('admin.doctors.index')->with('success', $successMsg);
     }
 
     public function edit(Doctor $doctor)
