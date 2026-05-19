@@ -89,8 +89,9 @@ class AppointmentController extends Controller
         try {
             $name = $appointment->patient->user->name;
             $doctorName = $appointment->doctor->user->name;
+            $docDisplayName = preg_match('/^(Dr\.?|Doctor)\s+/i', $doctorName) ? $doctorName : "Dr. " . $doctorName;
             $amount = $invoice->amount;
-            $msg = "Hello $name, your appointment with Dr. $doctorName has been marked as completed. An invoice of ₹$amount has been generated. Please complete your payment at: " . route('patient.appointments.index');
+            $msg = "Hello $name, your appointment with $docDisplayName has been marked as completed. An invoice of ₹$amount has been generated. Please complete your payment at: " . route('patient.appointments.index');
             \App\Services\WhatsappService::send($appointment->patient->user->phone ?? '9999999999', $msg);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Failed to send completed WhatsApp: " . $e->getMessage());

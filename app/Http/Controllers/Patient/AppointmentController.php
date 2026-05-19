@@ -52,9 +52,10 @@ class AppointmentController extends Controller
         try {
             $name = $appointment->patient->user->name;
             $doctorName = $appointment->doctor->user->name;
+            $docDisplayName = preg_match('/^(Dr\.?|Doctor)\s+/i', $doctorName) ? $doctorName : "Dr. " . $doctorName;
             $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y');
             $time = $appointment->appointment_time;
-            $msg = "Hello $name, your appointment request with Dr. $doctorName on $date at $time has been received and is pending approval. We will notify you once approved!";
+            $msg = "Hello $name, your appointment request with $docDisplayName on $date at $time has been received and is pending approval. We will notify you once approved!";
             \App\Services\WhatsappService::send($appointment->patient->user->phone ?? '9999999999', $msg);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Failed to send booking WhatsApp: " . $e->getMessage());

@@ -19,7 +19,7 @@
                     @forelse($leaves as $leave)
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                         <td class="px-6 py-4">
-                            <p class="font-bold text-gray-900 dark:text-white">{{ $leave->doctor->user->name }}</p>
+                            <p class="font-bold text-gray-900 dark:text-white">{{ $leave->doctor->user->display_name }}</p>
                             <p class="text-[10px] text-gray-400 font-medium">{{ $leave->doctor->specialty->name ?? 'Doctor' }}</p>
                         </td>
                         <td class="px-6 py-4">
@@ -35,7 +35,7 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             @if($leave->status === 'pending')
-                            <button onclick="openLeaveModal({{ $leave->id }}, '{{ $leave->doctor->user->name }}')" class="bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg hover:bg-black transition-colors">REVIEW</button>
+                            <button onclick="openLeaveModal({{ $leave->id }}, '{{ $leave->doctor->user->display_name }}')" class="bg-gray-900 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg hover:bg-black transition-colors">REVIEW</button>
                             @else
                             <span class="text-[10px] text-gray-300 font-bold uppercase tracking-widest">PROCESSED</span>
                             @endif

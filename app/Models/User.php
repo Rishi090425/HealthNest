@@ -59,4 +59,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserPreference::class);
     }
+
+    public function getDisplayNameAttribute()
+    {
+        if ($this->role === 'doctor') {
+            return preg_match('/^(Dr\.?|Doctor)\s+/i', $this->name) ? $this->name : "Dr. " . $this->name;
+        }
+        return $this->name;
+    }
 }

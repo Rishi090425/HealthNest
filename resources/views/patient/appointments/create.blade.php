@@ -31,7 +31,7 @@
                                 {{ strtoupper(substr($doctor->user->name, 0, 1)) }}
                             </div>
                             <div class="flex-1 min-w-0">
-                                <div class="text-sm font-medium text-gray-800">{{ $doctor->user->name }}</div>
+                                <div class="text-sm font-medium text-gray-800">{{ $doctor->user->display_name }}</div>
                                 <div class="text-xs text-gray-500">{{ $doctor->specialization }} · {{ $doctor->qualification }}</div>
                             </div>
                             <div class="text-sm font-semibold text-blue-600 flex-shrink-0">₹{{ number_format($doctor->consultation_fee) }}</div>

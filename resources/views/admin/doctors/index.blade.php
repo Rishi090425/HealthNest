@@ -49,7 +49,7 @@
                                     {{ strtoupper(substr($doctor->user->name, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium text-gray-800">{{ $doctor->user->name }}</div>
+                                    <div class="text-sm font-medium text-gray-800">{{ $doctor->user->display_name }}</div>
                                     <div class="text-xs text-gray-500">{{ $doctor->user->email }}</div>
                                 </div>
                             </div>

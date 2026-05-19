@@ -79,7 +79,7 @@
                             </div>
                         </td>
                         <td class="py-4 pr-4 hidden sm:table-cell">
-                            <div class="text-sm font-medium text-gray-700">{{ $appt->doctor->user->name }}</div>
+                            <div class="text-sm font-medium text-gray-700">{{ $appt->doctor->user->display_name }}</div>
                             <div class="text-xs text-gray-400">{{ $appt->doctor->specialization }}</div>
                         </td>
                         <td class="py-4 pr-4 hidden md:table-cell">

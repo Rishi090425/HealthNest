@@ -117,8 +117,9 @@ class DatabaseSeeder extends Seeder
         $doctors = [];
 
         foreach ($doctorData as $i => $data) {
+            $cleanName = preg_replace('/^(Dr\.?|Doctor)\s+/i', '', $data['name']);
             $user = User::create([
-                'name' => $data['name'], 'email' => $data['email'],
+                'name' => $cleanName, 'email' => $data['email'],
                 'password' => Hash::make('password'),
                 'role' => 'doctor', 'phone' => $data['phone'], 'status' => 'active',
             ]);

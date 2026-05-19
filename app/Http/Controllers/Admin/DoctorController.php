@@ -41,8 +41,11 @@ class DoctorController extends Controller
             'consultation_fee' => 'nullable|numeric|min:0',
         ]);
 
+        // Strip any "Dr.", "Dr ", "Doctor " prefix from the doctor name to keep it clean in DB
+        $cleanName = preg_replace('/^(Dr\.?|Doctor)\s+/i', '', $validated['name']);
+
         $user = User::create([
-            'name'     => $validated['name'],
+            'name'     => $cleanName,
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role'     => 'doctor',
@@ -73,7 +76,8 @@ class DoctorController extends Controller
         // Send Credentials via WhatsApp
         try {
             $loginUrl = url('/login');
-            $msg = "Hello Dr. {$user->name}, your professional account at Health Nest has been successfully created. You can log in using: Link: {$loginUrl} | Email: {$user->email} | Password: {$validated['password']}";
+            $docDisplayName = preg_match('/^(Dr\.?|Doctor)\s+/i', $user->name) ? $user->name : "Dr. " . $user->name;
+            $msg = "Hello {$docDisplayName}, your professional account at Health Nest has been successfully created. You can log in using: Link: {$loginUrl} | Email: {$user->email} | Password: {$validated['password']}";
             \App\Services\WhatsappService::send($user->phone ?? '9999999999', $msg);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('WhatsApp credentials failed: ' . $e->getMessage());
@@ -106,8 +110,11 @@ class DoctorController extends Controller
             'status'           => 'required|in:active,inactive',
         ]);
 
+        // Strip any "Dr.", "Dr ", "Doctor " prefix from the doctor name to keep it clean in DB
+        $cleanName = preg_replace('/^(Dr\.?|Doctor)\s+/i', '', $validated['name']);
+
         $doctor->user->update([
-            'name'   => $validated['name'],
+            'name'   => $cleanName,
             'email'  => $validated['email'],
             'phone'  => $validated['phone'] ?? null,
             'status' => $validated['status'],
