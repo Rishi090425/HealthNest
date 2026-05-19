@@ -22,11 +22,16 @@ Route::get('/generate-models', function () {
 
 // Secure One-Click Database Seeding for Render Free Tier
 Route::get('/seed-database', function () {
-    if (\App\Models\User::where('role', 'admin')->exists()) {
-        return 'Database has already been seeded with an Administrator account!';
-    }
-    
     try {
+        if (request()->query('fresh') === 'true') {
+            \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+            return 'Database successfully refreshed and seeded! All tables cleared and 13 Indian doctors with 3 patients each have been seeded. <br><br><strong>Output:</strong><br>' . nl2br(\Illuminate\Support\Facades\Artisan::output());
+        }
+
+        if (\App\Models\User::where('role', 'admin')->exists()) {
+            return 'Database has already been seeded with an Administrator account! <br><br>If you want to clear the old data and seed all the 13 doctors and patients, click here: <a href="/seed-database?fresh=true" style="color: blue; font-weight: bold; text-decoration: underline;">Refresh and Fresh Seed Database</a>';
+        }
+        
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
         return 'Database successfully seeded! <br><br><strong>Output:</strong><br>' . nl2br(\Illuminate\Support\Facades\Artisan::output());
     } catch (\Exception $e) {
