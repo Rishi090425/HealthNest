@@ -120,7 +120,7 @@ class DatabaseSeeder extends Seeder
             $cleanName = preg_replace('/^(Dr\.?|Doctor)\s+/i', '', $data['name']);
             $user = User::create([
                 'name' => $cleanName, 'email' => $data['email'],
-                'password' => Hash::make('password'),
+                'password' => Hash::make('12345678'),
                 'role' => 'doctor', 'phone' => $data['phone'], 'status' => 'active',
             ]);
 
