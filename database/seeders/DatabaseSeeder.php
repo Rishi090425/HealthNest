@@ -55,6 +55,62 @@ class DatabaseSeeder extends Seeder
                 'experience_years' => 5, 'consultation_fee' => 500,
                 'bio' => 'Experienced physiotherapist specializing in sports injuries and rehabilitation.',
             ],
+            [
+                'name' => 'Dr. Sunita Rao', 'email' => 'drsarah@healthcare.com',
+                'phone' => '+91 98000 00006',
+                'specialization' => 'Dermatologist', 'qualification' => 'MBBS, MD (Dermatology)',
+                'experience_years' => 9, 'consultation_fee' => 600,
+                'bio' => 'Specialist in clinical dermatology, skin surgeries, and cosmetic treatments.',
+            ],
+            [
+                'name' => 'Dr. Manoj Kumar', 'email' => 'drmichael@healthcare.com',
+                'phone' => '+91 98000 00007',
+                'specialization' => 'Pediatrician', 'qualification' => 'MBBS, MD (Pediatrics)',
+                'experience_years' => 10, 'consultation_fee' => 700,
+                'bio' => 'Dedicated pediatrician offering comprehensive care for infants, children, and adolescents.',
+            ],
+            [
+                'name' => 'Dr. Esha Divan', 'email' => 'drelena@healthcare.com',
+                'phone' => '+91 98000 00008',
+                'specialization' => 'Gynecologist', 'qualification' => 'MBBS, MS (Obstetrics & Gynecology)',
+                'experience_years' => 11, 'consultation_fee' => 800,
+                'bio' => 'Expert in maternal-fetal medicine, prenatal care, and gynecological surgeries.',
+            ],
+            [
+                'name' => 'Dr. Jagdish Chandra', 'email' => 'drjames@healthcare.com',
+                'phone' => '+91 98000 00009',
+                'specialization' => 'Orthopedist', 'qualification' => 'MBBS, MS (Orthopedics)',
+                'experience_years' => 8, 'consultation_fee' => 900,
+                'bio' => 'Specializes in joint replacements, sports injuries, and musculoskeletal disorders.',
+            ],
+            [
+                'name' => 'Dr. Ekta Kapoor', 'email' => 'dremily@healthcare.com',
+                'phone' => '+91 98000 00010',
+                'specialization' => 'Psychiatrist', 'qualification' => 'MBBS, MD (Psychiatry)',
+                'experience_years' => 7, 'consultation_fee' => 1000,
+                'bio' => 'Compassionate care for anxiety, depression, mood disorders, and psychological well-being.',
+            ],
+            [
+                'name' => 'Dr. Devashish Vyas', 'email' => 'drdavid@healthcare.com',
+                'phone' => '+91 98000 00011',
+                'specialization' => 'Ophthalmologist', 'qualification' => 'MBBS, MS (Ophthalmology)',
+                'experience_years' => 6, 'consultation_fee' => 600,
+                'bio' => 'Specialist in eye surgery, vision correction, and treatment of glaucoma and cataracts.',
+            ],
+            [
+                'name' => 'Dr. Alisha Chinoy', 'email' => 'dralisha@healthcare.com',
+                'phone' => '+91 98000 00012',
+                'specialization' => 'Dentist', 'qualification' => 'BDS, MDS (Orthodontics)',
+                'experience_years' => 5, 'consultation_fee' => 500,
+                'bio' => 'Dedicated orthodontist providing advanced dental alignments, cleanings, and oral hygiene.',
+            ],
+            [
+                'name' => 'Dr. Rajesh Lokhande', 'email' => 'drrobert@healthcare.com',
+                'phone' => '+91 98000 00013',
+                'specialization' => 'ENT Specialist', 'qualification' => 'MBBS, MS (ENT)',
+                'experience_years' => 8, 'consultation_fee' => 700,
+                'bio' => 'Expert treatment for ear, nose, throat, head and neck ailments.',
+            ],
         ];
 
         $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
