@@ -365,7 +365,7 @@
                 if (userMsg.includes('yes') || userMsg.includes('yep') || userMsg.includes('sure') || userMsg.includes('book') || userMsg.includes('ok') || userMsg.includes('ha')) {
                     this.messages.push({ 
                         role: 'bot', 
-                        text: 'Wonderful! 📅 <a href=\'/patient/appointments/create\' class=\'underline text-blue-600 font-bold hover:text-blue-800\'>Click here to book your appointment</a> with our ' + this.lastSpecialist + ' now!' 
+                        text: 'Wonderful! 📅 <a href=\'{{ route(\'patient.appointments.create\') }}\' class=\'underline text-blue-600 font-bold hover:text-blue-800\'>Click here to book your appointment</a> with our ' + this.lastSpecialist + ' now!' 
                     });
                     this.state = 'symptoms';
                 } else if (userMsg.includes('no') || userMsg.includes('nope') || userMsg.includes('not') || userMsg.includes('na')) {
