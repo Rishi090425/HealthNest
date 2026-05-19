@@ -179,16 +179,14 @@
                                 <img src="{{ $qrCodeUrl }}" alt="Payment QR" class="w-36 h-36 mx-auto">
                             </div>
 
-                            <form method="POST" action="{{ route('patient.invoices.pay', $appt->invoice) }}" 
-                                  @submit.prevent="successAmount = '{{ number_format($appt->invoice->balance, 2) }}'; successAnim = true; const form = $event.target; setTimeout(() => form.submit(), 2200)"
-                                  class="space-y-2">
+                             <form id="pay-form-{{ $appt->invoice->id }}" method="POST" action="{{ route('patient.invoices.pay', $appt->invoice) }}" class="space-y-2">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="upi">
                                 <input type="hidden" name="amount" value="{{ $appt->invoice->balance }}">
-                                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-xs shadow-sm flex items-center justify-center gap-1.5 transition-colors">
+                                <button type="button" @click="successAmount = '{{ number_format($appt->invoice->balance, 2) }}'; successAnim = true; setTimeout(() => document.getElementById('pay-form-{{ $appt->invoice->id }}').submit(), 2000)" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-xs shadow-sm flex items-center justify-center gap-1.5 transition-colors animate-pulse">
                                     <i class="fas fa-check-circle"></i> I HAVE PAID (CONFIRM)
                                 </button>
-                            </form>
+                             </form>
                         </div>
 
                         {{-- Pay at Hospital --}}

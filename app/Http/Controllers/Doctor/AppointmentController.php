@@ -74,16 +74,29 @@ class AppointmentController extends Controller
 
         // Generate Invoice automatically if it doesn't exist
         $doctor = auth()->user()->doctor;
+        $isOnlinePaid = ($appointment->payment_method === 'online');
         $invoice = \App\Models\Invoice::firstOrCreate(
             ['appointment_id' => $appointment->id],
             [
                 'patient_id' => $appointment->patient_id,
                 'amount'     => $doctor->consultation_fee ?? 500,
-                'status'     => 'unpaid',
+                'status'     => $isOnlinePaid ? 'paid' : 'unpaid',
                 'issued_date' => now(),
                 'due_date'    => now()->addDays(7),
             ]
         );
+
+        if ($isOnlinePaid) {
+            \App\Models\Payment::firstOrCreate(
+                ['invoice_id' => $invoice->id],
+                [
+                    'amount'         => $invoice->amount,
+                    'payment_method' => 'online',
+                    'transaction_id' => $appointment->payment_transaction_id ?? 'TXN-' . strtoupper(uniqid()),
+                    'payment_date'   => now(),
+                ]
+            );
+        }
 
         // AUTOMATICALLY send WhatsApp invoice notification!
         try {

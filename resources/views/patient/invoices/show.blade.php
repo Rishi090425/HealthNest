@@ -165,12 +165,11 @@
                                  alt="Payment QR" class="w-48 h-48">
                         </div>
                         <div class="flex flex-col gap-2">
-                            <form method="POST" action="{{ route('patient.invoices.pay', $invoice) }}"
-                                  @submit.prevent="successAnim = true; const form = $event.target; setTimeout(() => form.submit(), 2200)">
+                             <form id="pay-invoice-form" method="POST" action="{{ route('patient.invoices.pay', $invoice) }}">
                                 @csrf
                                 <input type="hidden" name="payment_method" value="upi">
                                 <input type="hidden" name="amount" value="{{ $invoice->balance }}">
-                                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-900/20 transition-all flex items-center justify-center gap-2">
+                                <button type="button" @click="successAnim = true; setTimeout(() => document.getElementById('pay-invoice-form').submit(), 2000)" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-900/20 transition-all flex items-center justify-center gap-2 animate-pulse">
                                     <i class="fas fa-check-circle"></i>
                                     I HAVE PAID (CONFIRM)
                                 </button>
