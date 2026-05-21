@@ -93,16 +93,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::patch('/emergency-alerts/{alert}/respond',    [Admin\EmergencyAlertController::class, 'respond'])->name('emergency-alerts.respond');
     Route::patch('/emergency-alerts/{alert}/resolve',    [Admin\EmergencyAlertController::class, 'resolve'])->name('emergency-alerts.resolve');
 
-    // Virtual Queue
-    Route::get('/queue',                   [Admin\WalkInQueueController::class, 'index'])->name('queue.index');
-    Route::post('/queue/call-next',        [Admin\WalkInQueueController::class, 'callNext'])->name('queue.call-next');
-    Route::patch('/queue/{queue}/status',  [Admin\WalkInQueueController::class, 'updateStatus'])->name('queue.status');
+    // Virtual Queue (Commented out as requested)
+    // Route::get('/queue',                   [Admin\WalkInQueueController::class, 'index'])->name('queue.index');
+    // Route::post('/queue/call-next',        [Admin\WalkInQueueController::class, 'callNext'])->name('queue.call-next');
+    // Route::patch('/queue/{queue}/status',  [Admin\WalkInQueueController::class, 'updateStatus'])->name('queue.status');
 
-    // Medicine Inventory
-    Route::get('/inventory',                   [Admin\InventoryController::class, 'index'])->name('inventory.index');
-    Route::get('/inventory/create',            [Admin\InventoryController::class, 'create'])->name('inventory.create');
-    Route::post('/inventory',                  [Admin\InventoryController::class, 'store'])->name('inventory.store');
-    Route::patch('/inventory/{medication}',    [Admin\InventoryController::class, 'updateStock'])->name('inventory.update-stock');
+    // Medicine Inventory (Commented out as requested)
+    // Route::get('/inventory',                   [Admin\InventoryController::class, 'index'])->name('inventory.index');
+    // Route::get('/inventory/create',            [Admin\InventoryController::class, 'create'])->name('inventory.create');
+    // Route::post('/inventory',                  [Admin\InventoryController::class, 'store'])->name('inventory.store');
+    // Route::patch('/inventory/{medication}',    [Admin\InventoryController::class, 'updateStock'])->name('inventory.update-stock');
 
     // Complaints
     Route::get('/complaints',                         [Admin\ComplaintController::class, 'index'])->name('complaints.index');
@@ -111,9 +111,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Announcements
     Route::resource('announcements', Admin\AnnouncementController::class)->except(['show']);
 
-    // Departments & Specialties
-    Route::resource('departments', Admin\DepartmentController::class)->except(['show']);
-    Route::resource('specialties',  Admin\SpecialtyController::class)->except(['show']);
+    // Departments & Specialties (Commented out as requested)
+    // Route::resource('departments', Admin\DepartmentController::class)->except(['show']);
+    // Route::resource('specialties',  Admin\SpecialtyController::class)->except(['show']);
 
     // Invoices & Payments
     Route::resource('invoices', Admin\InvoiceController::class)->only(['index', 'create', 'store', 'show']);

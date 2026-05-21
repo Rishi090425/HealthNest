@@ -82,12 +82,7 @@
                 <a href="{{ route('admin.appointments.index') }}" class="sidebar-item {{ request()->routeIs('admin.appointments*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
                     <i class="fas fa-calendar-check w-4"></i> Appointments
                 </a>
-                <a href="{{ route('admin.departments.index') }}" class="sidebar-item {{ request()->routeIs('admin.departments*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
-                    <i class="fas fa-hospital w-4"></i> Departments
-                </a>
-                <a href="{{ route('admin.specialties.index') }}" class="sidebar-item {{ request()->routeIs('admin.specialties*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
-                    <i class="fas fa-stethoscope w-4"></i> Specialties
-                </a>
+
                 <a href="{{ route('admin.invoices.index') }}" class="sidebar-item {{ request()->routeIs('admin.invoices*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
                     <i class="fas fa-file-invoice-dollar w-4"></i> Invoices
                 </a>
@@ -106,12 +101,7 @@
                 <a href="{{ route('admin.emergency-alerts.index') }}" class="sidebar-item {{ request()->routeIs('admin.emergency-alerts*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
                     <i class="fas fa-exclamation-triangle w-4"></i> Emergency SOS
                 </a>
-                <a href="{{ route('admin.queue.index') }}" class="sidebar-item {{ request()->routeIs('admin.queue*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
-                    <i class="fas fa-users-viewfinder w-4"></i> Walk-in Queue
-                </a>
-                <a href="{{ route('admin.inventory.index') }}" class="sidebar-item {{ request()->routeIs('admin.inventory*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
-                    <i class="fas fa-pills w-4"></i> Pharmacy Inventory
-                </a>
+
                 <a href="{{ route('admin.audit-logs.index') }}" class="sidebar-item {{ request()->routeIs('admin.audit-logs*') ? 'active' : '' }} flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm">
                     <i class="fas fa-history w-4"></i> Audit Log
                 </a>
