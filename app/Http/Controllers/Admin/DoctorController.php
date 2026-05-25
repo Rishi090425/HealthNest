@@ -65,17 +65,33 @@ class DoctorController extends Controller
             'consultation_fee' => $validated['consultation_fee'] ?? 0,
         ]);
 
-        // Send credentials email directly
+        // Send credentials email
+        $successMsg = 'Doctor added successfully!';
+        
         try {
-            Mail::to($user->email)->send(
-                new DoctorCredentialsMail($user->display_name, $user->email, $validated['password'])
-            );
-            Log::info("Doctor credentials email sent successfully to: " . $user->email);
+            Log::info("===== DOCTOR CREDENTIALS EMAIL =====");
+            Log::info("Attempting to send credentials to: " . $user->email);
+            Log::info("Mail Driver: " . config('mail.default'));
+            Log::info("SMTP Host: " . config('mail.mailers.smtp.host'));
+            Log::info("From Address: " . config('mail.from.address'));
+            
+            // Queue the email for reliable delivery
+            Mail::to($user->email)->queue(new DoctorCredentialsMail($user->display_name, $user->email, $validated['password']));
+
+            Log::info("✓ Email queued for: " . $user->email);
+            $successMsg .= ' Credentials have been queued to ' . $user->email . '.';
+            
         } catch (\Exception $e) {
-            Log::error('Doctor credentials email failed: ' . $e->getMessage());
+            Log::error('✗ Email Failed: ' . $e->getMessage());
+            Log::error('Exception Class: ' . get_class($e));
+            Log::error('File: ' . $e->getFile());
+            Log::error('Line: ' . $e->getLine());
+            Log::error('Stack Trace: ' . $e->getTraceAsString());
+            
+            $successMsg .= ' (⚠️  Email sending failed - Check logs. Manual credentials: Email: ' . $user->email . ' | Password: ' . $validated['password'] . ')';
         }
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor added successfully! Credentials have been sent to their email.');
+        return redirect()->route('admin.doctors.index')->with('success', $successMsg);
     }
 
     public function edit(Doctor $doctor)

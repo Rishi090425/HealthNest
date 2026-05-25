@@ -2,13 +2,12 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class DoctorCredentialsMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     public $name;
     public $email;
@@ -24,6 +23,7 @@ class DoctorCredentialsMail extends Mailable
     public function build()
     {
         return $this->subject('Welcome to Health Nest - Your Login Credentials')
+                    ->from(config('mail.from.address'), config('mail.from.name'))
                     ->view('emails.doctor_credentials');
     }
 }

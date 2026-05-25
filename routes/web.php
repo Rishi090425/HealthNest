@@ -251,3 +251,18 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'role:patient'])
     Route::post('/vaccinations',            [Patient\VaccinationController::class, 'store'])->name('vaccinations.store');
     Route::delete('/vaccinations/{vaccination}', [Patient\VaccinationController::class, 'destroy'])->name('vaccinations.destroy');
 });
+
+// Test Email Route (Remove in production)
+Route::get('/test-doctor-email', function () {
+    try {
+        $testEmail = 'test@example.com';
+        \Illuminate\Support\Facades\Mail::raw('This is a test email from Health Nest', function ($message) use ($testEmail) {
+            $message->to($testEmail)
+                    ->subject('Test Email from Health Nest')
+                    ->from(config('mail.from.address'), config('mail.from.name'));
+        });
+        return 'Test email sent successfully to ' . $testEmail;
+    } catch (\Exception $e) {
+        return 'Email test failed: ' . $e->getMessage() . '<br><br>Stack: ' . $e->getTraceAsString();
+    }
+});

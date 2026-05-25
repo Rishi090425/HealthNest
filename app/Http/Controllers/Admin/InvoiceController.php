@@ -14,7 +14,7 @@ class InvoiceController extends Controller
     public function index()
     {
         $invoices = Invoice::with(['patient.user', 'appointment.doctor.user'])->latest()->paginate(10);
-        $totalRevenue = Invoice::sum('amount');
+        $totalRevenue = Invoice::where('status', 'paid')->sum('amount');
         $pendingAmount = Invoice::where('status', '!=', 'paid')->sum('amount') - Payment::sum('amount');
         
         return view('admin.invoices.index', compact('invoices', 'totalRevenue', 'pendingAmount'));
