@@ -75,19 +75,31 @@ class DoctorController extends Controller
             Log::info("SMTP Host: " . config('mail.mailers.smtp.host'));
             Log::info("From Address: " . config('mail.from.address'));
             
-            // Queue the email for reliable delivery
-            Mail::to($user->email)->queue(new DoctorCredentialsMail($user->display_name, $user->email, $validated['password']));
+            // DEBUG: send synchronously so we can see the real SMTP/transport error immediately.
+            // After debugging, you can switch back to ->queue(...).
+            Mail::to($user->email)->send(new DoctorCredentialsMail($user->display_name, $user->email, $validated['password']));
 
-            Log::info("✓ Email queued for: " . $user->email);
-            $successMsg .= ' Credentials have been queued to ' . $user->email . '.';
+            Log::info("✓ Email sent to: " . $user->email);
+            $successMsg .= ' Credentials have been sent to ' . $user->email . '.';
+            
             
         } catch (\Exception $e) {
-            Log::error('✗ Email Failed: ' . $e->getMessage());
+            Log::error('✗ Email Failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'recipient' => $user->email,
+                'mail_default' => config('mail.default'),
+                'queue_default' => config('queue.default'),
+                'smtp_host' => config('mail.mailers.smtp.host'),
+                'smtp_port' => config('mail.mailers.smtp.port'),
+                'smtp_encryption' => config('mail.mailers.smtp.encryption'),
+                'from_address' => config('mail.from.address'),
+            ]);
+
             Log::error('Exception Class: ' . get_class($e));
             Log::error('File: ' . $e->getFile());
             Log::error('Line: ' . $e->getLine());
             Log::error('Stack Trace: ' . $e->getTraceAsString());
-            
+
             $successMsg .= ' (⚠️  Email sending failed - Check logs. Manual credentials: Email: ' . $user->email . ' | Password: ' . $validated['password'] . ')';
         }
 
