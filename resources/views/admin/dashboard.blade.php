@@ -4,7 +4,7 @@
 @section('content')
 <div class="space-y-6">
     {{-- KPI Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
         <!-- Total Patients -->
         <a href="{{ route('admin.patients.index') }}" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 flex items-center gap-4 border-b-4 border-blue-500 hover:shadow-md hover:scale-[1.02] transition-all duration-300">
             <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
@@ -46,6 +46,28 @@
             <div>
                 <p class="text-xs text-gray-500 font-medium">Pending Appts</p>
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['pending_appointments'] }}</p>
+            </div>
+        </a>
+
+        <!-- Total Revenue -->
+        <a href="{{ route('admin.invoices.index') }}" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 flex items-center gap-4 border-b-4 border-green-600 hover:shadow-md hover:scale-[1.02] transition-all duration-300">
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center">
+                <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-medium">Total Revenue</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">₹{{ number_format($totalRevenue, 0) }}</p>
+            </div>
+        </a>
+
+        <!-- Pending Amount -->
+        <a href="{{ route('admin.invoices.index') }}" class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 flex items-center gap-4 border-b-4 border-red-500 hover:shadow-md hover:scale-[1.02] transition-all duration-300">
+            <div class="w-12 h-12 bg-red-100 dark:bg-red-900/40 rounded-xl flex items-center justify-center">
+                <i class="fas fa-hourglass-end text-red-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 font-medium">Pending Amount</p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white">₹{{ number_format($pendingAmount, 0) }}</p>
             </div>
         </a>
     </div>
@@ -122,5 +144,97 @@
             </div>
         </div>
     </div>
+
+    {{-- Revenue Section --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {{-- Recent Transactions --}}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold text-gray-800 dark:text-gray-100">Recent Transactions</h3>
+                <a href="{{ route('admin.invoices.index') }}" class="text-xs text-primary-600 hover:underline font-medium">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 text-left">
+                        <tr>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Patient</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Amount</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Method</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y dark:divide-gray-700">
+                        @forelse($recent_transactions as $txn)
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-4 py-3">
+                                <a href="{{ route('admin.patients.show', $txn->invoice->patient) }}" class="group block">
+                                    <p class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 group-hover:underline">{{ $txn->invoice->patient->user->name }}</p>
+                                </a>
+                            </td>
+                            <td class="px-4 py-3 font-semibold text-green-600 dark:text-green-400">₹{{ number_format($txn->amount, 2) }}</td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs">
+                                <span class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium">
+                                    {{ ucfirst($txn->payment_method ?? 'N/A') }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-gray-400 text-xs">{{ $txn->payment_date->format('d M, Y') }}</td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500">No transactions yet</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{-- Recent Invoices --}}
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold text-gray-800 dark:text-gray-100">Recent Invoices</h3>
+                <a href="{{ route('admin.invoices.index') }}" class="text-xs text-primary-600 hover:underline font-medium">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 text-gray-500 text-left">
+                        <tr>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Invoice #</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Patient</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Amount</th>
+                            <th class="px-4 py-3 font-medium uppercase text-[10px] tracking-wider">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y dark:divide-gray-700">
+                        @forelse($recent_invoices as $inv)
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="px-4 py-3 font-mono text-gray-700 dark:text-gray-300">
+                                <a href="{{ route('admin.invoices.show', $inv) }}" class="hover:text-blue-600 hover:underline">#{{ str_pad($inv->id, 5, '0', STR_PAD_LEFT) }}</a>
+                            </td>
+                            <td class="px-4 py-3">
+                                <a href="{{ route('admin.patients.show', $inv->patient) }}" class="group block">
+                                    <p class="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 group-hover:underline">{{ $inv->patient->user->name }}</p>
+                                </a>
+                            </td>
+                            <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">₹{{ number_format($inv->amount, 2) }}</td>
+                            <td class="px-4 py-3">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
+                                    {{ $inv->status === 'paid' ? 'bg-green-100 text-green-700' : 
+                                       ($inv->status === 'unpaid' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                                    {{ $inv->status }}
+                                </span>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-500">No invoices yet</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
+

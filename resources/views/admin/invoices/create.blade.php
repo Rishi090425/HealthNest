@@ -27,7 +27,7 @@
                     @foreach($appointments as $appt)
                     <option value="{{ $appt->id }}" data-patient="{{ $appt->patient_id }}" data-fee="{{ $appt->doctor->consultation_fee ?? 500 }}"
                         {{ (old('appointment_id') == $appt->id || ($selected_appointment && $selected_appointment->id == $appt->id)) ? 'selected' : '' }}>
-                        Dr. {{ $appt->doctor->user->name }} — {{ $appt->appointment_date->format('d M Y') }}
+                        {{ $appt->doctor->user->display_name }} — {{ $appt->appointment_date->format('d M Y') }}
                     </option>
                     @endforeach
                 </select>

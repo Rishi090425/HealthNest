@@ -50,7 +50,7 @@
         @endif
 
         <div class="mt-5 pt-4 border-t dark:border-gray-700 flex justify-between items-center text-sm text-gray-500">
-            <span>Issued by Dr. {{ $prescription->doctor->user->name }}</span>
+            <span>Issued by {{ $prescription->doctor->user->display_name }}</span>
             <span>{{ $prescription->created_at->format('d M Y, H:i') }}</span>
         </div>
     </div>

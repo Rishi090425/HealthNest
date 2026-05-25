@@ -28,7 +28,7 @@ class SendDoctorCredentials extends Command
         // 1. Send Credentials Email
         try {
             Mail::to($user->email)->send(
-                new DoctorCredentialsMail($user->name, $user->email, $password)
+                new DoctorCredentialsMail($user->display_name, $user->email, $password)
             );
             Log::info("Background email sent successfully to: " . $user->email);
         } catch (\Exception $e) {

@@ -25,7 +25,7 @@
                 @forelse($referrals as $ref)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $ref->patient->user->name }}</td>
-                    <td class="px-4 py-3 text-gray-700 dark:text-gray-300">Dr. {{ $ref->referredDoctor->user->name }}</td>
+                    <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $ref->referredDoctor->user->display_name }}</td>
                     <td class="px-4 py-3 text-gray-600 dark:text-gray-400 max-w-xs truncate">{{ $ref->reason }}</td>
                     <td class="px-4 py-3">
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $ref->status === 'accepted' ? 'bg-green-100 text-green-700' : ($ref->status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">

@@ -34,7 +34,7 @@
             @if($invoice->appointment)
             <div>
                 <p class="text-xs font-bold text-gray-400 uppercase mb-2">Service Details:</p>
-                <p class="text-sm text-gray-900 dark:text-white font-medium">Consultation with Dr. {{ $invoice->appointment->doctor->user->name }}</p>
+                <p class="text-sm text-gray-900 dark:text-white font-medium">Consultation with {{ $invoice->appointment->doctor->user->display_name }}</p>
                 <p class="text-sm text-gray-500">{{ $invoice->appointment->appointment_date->format('d M Y') }}</p>
             </div>
             @endif

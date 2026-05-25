@@ -60,7 +60,7 @@
                     <span class="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-xs font-bold text-primary-700 dark:text-primary-300">{{ $i + 1 }}</span>
                     <div class="flex-1">
                         <div class="flex justify-between text-sm">
-                            <span class="font-medium text-gray-900 dark:text-white">Dr. {{ $doc->user->name }}</span>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $doc->user->display_name }}</span>
                             <span class="text-gray-500">{{ $doc->appointments_count }}</span>
                         </div>
                         <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 mt-1">

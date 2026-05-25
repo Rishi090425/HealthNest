@@ -108,7 +108,7 @@
     @endif
 
     <div class="doctor-signature">
-        <div class="doctor-name">Dr. {{ $prescription->doctor->user->name }}</div>
+        <div class="doctor-name">{{ $prescription->doctor->user->display_name }}</div>
         <div class="doctor-reg">{{ $prescription->doctor->specialization }} | Reg: {{ $prescription->doctor->license_number }}</div>
     </div>
 

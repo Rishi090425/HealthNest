@@ -24,7 +24,7 @@
         <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-6">
             <p class="text-xs text-gray-500 mb-1">Appointment</p>
             <p class="font-medium text-gray-800 dark:text-gray-100">
-                Dr. {{ $invoice->appointment->doctor->user->name }} · {{ $invoice->appointment->appointment_date->format('d M Y') }}
+                {{ $invoice->appointment->doctor->user->display_name }} · {{ $invoice->appointment->appointment_date->format('d M Y') }}
             </p>
         </div>
         @endif

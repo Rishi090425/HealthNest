@@ -62,7 +62,7 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                         <td class="px-4 py-3 font-mono text-gray-700 dark:text-gray-300">#{{ str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}</td>
                         <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $invoice->issued_date?->format('d M Y') ?? '—' }}</td>
-                        <td class="px-4 py-3 text-gray-700 dark:text-gray-300">Dr. {{ $invoice->appointment?->doctor?->user?->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3 text-gray-700 dark:text-gray-300">{{ $invoice->appointment?->doctor?->user?->display_name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">₹{{ number_format($invoice->amount, 2) }}</td>
                         <td class="px-4 py-3 text-green-600">₹{{ number_format($invoice->total_paid, 2) }}</td>
                         <td class="px-4 py-3 {{ $invoice->balance > 0 ? 'text-red-600 font-semibold' : 'text-gray-500' }}">₹{{ number_format($invoice->balance, 2) }}</td>

@@ -7,6 +7,9 @@ use App\Models\Doctor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\DoctorCredentialsMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class DoctorController extends Controller
 {
@@ -62,19 +65,17 @@ class DoctorController extends Controller
             'consultation_fee' => $validated['consultation_fee'] ?? 0,
         ]);
 
-        // Dispatch notifications in the background to prevent page hangs/timeouts!
+        // Send credentials email directly
         try {
-            $cmd = "php " . base_path('artisan') . " doctor:send-credentials " . escapeshellarg($user->id) . " " . escapeshellarg($validated['password']);
-            if (substr(php_uname(), 0, 7) == "Windows") {
-                pclose(popen("start /B " . $cmd, "r"));
-            } else {
-                exec($cmd . " > /dev/null 2>&1 &");
-            }
+            Mail::to($user->email)->send(
+                new DoctorCredentialsMail($user->display_name, $user->email, $validated['password'])
+            );
+            Log::info("Doctor credentials email sent successfully to: " . $user->email);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Failed to trigger background credentials: " . $e->getMessage());
+            Log::error('Doctor credentials email failed: ' . $e->getMessage());
         }
 
-        return redirect()->route('admin.doctors.index')->with('success', 'Doctor added successfully! Credentials are being sent in the background.');
+        return redirect()->route('admin.doctors.index')->with('success', 'Doctor added successfully! Credentials have been sent to their email.');
     }
 
     public function edit(Doctor $doctor)

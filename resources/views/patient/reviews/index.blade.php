@@ -19,7 +19,7 @@
                         <i class="fas fa-user-md text-primary-600"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-900 dark:text-white text-sm">Dr. {{ $review->doctor->user->name }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ $review->doctor->user->display_name }}</p>
                         <p class="text-xs text-gray-500">{{ $review->appointment?->appointment_date?->format('d M Y') }}</p>
                     </div>
                 </div>

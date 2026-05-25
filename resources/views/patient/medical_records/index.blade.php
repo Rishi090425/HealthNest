@@ -29,7 +29,7 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                         <td class="px-4 py-3">{{ $rec->record_date->format('d M Y') }}</td>
                         <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">{{ ucfirst($rec->type) }}</span></td>
-                        <td class="px-4 py-3">Dr. {{ $rec->doctor?->user?->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-3">{{ $rec->doctor?->user?->display_name ?? 'N/A' }}</td>
                         <td class="px-4 py-3 max-w-xs truncate text-gray-600 dark:text-gray-400">{{ $rec->details }}</td>
                         <td class="px-4 py-3">
                             @if($rec->file_path)
@@ -51,7 +51,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
                 <div class="flex items-start justify-between mb-4">
                     <div>
-                        <p class="font-semibold text-gray-800 dark:text-gray-100">Dr. {{ $rx->doctor->user->name }}</p>
+                        <p class="font-semibold text-gray-800 dark:text-gray-100">{{ $rx->doctor->user->display_name }}</p>
                         <p class="text-sm text-gray-500">{{ $rx->prescription_date->format('d M Y') }}</p>
                     </div>
                     <div class="flex items-center gap-2">
@@ -102,7 +102,7 @@
                 <div class="flex items-start justify-between mb-3">
                     <div>
                         <p class="font-semibold text-gray-800 dark:text-gray-100">{{ $order->test_type }}</p>
-                        <p class="text-sm text-gray-500">Ordered by Dr. {{ $order->doctor->user->name }} · {{ $order->order_date->format('d M Y') }}</p>
+                        <p class="text-sm text-gray-500">Ordered by {{ $order->doctor->user->display_name }} · {{ $order->order_date->format('d M Y') }}</p>
                     </div>
                     <span class="text-xs px-3 py-1 rounded-full font-medium {{ $order->status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
                         {{ ucfirst($order->status) }}

@@ -22,7 +22,7 @@
                     <option value="">Select Doctor...</option>
                     @foreach($doctors as $doc)
                     <option value="{{ $doc->id }}" {{ old('referred_doctor_id') == $doc->id ? 'selected' : '' }}>
-                        Dr. {{ $doc->user->name }} ({{ $doc->specialization }})
+                        {{ $doc->user->display_name }} ({{ $doc->specialization }})
                     </option>
                     @endforeach
                 </select>

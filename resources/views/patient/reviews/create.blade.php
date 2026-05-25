@@ -22,7 +22,7 @@
                     <option value="">Choose an appointment...</option>
                     @foreach($appointments as $appt)
                     <option value="{{ $appt->id }}" data-doctor="{{ $appt->doctor_id }}">
-                        Dr. {{ $appt->doctor->user->name }} — {{ $appt->appointment_date->format('d M Y') }}
+                        {{ $appt->doctor->user->display_name }} — {{ $appt->appointment_date->format('d M Y') }}
                     </option>
                     @endforeach
                 </select>

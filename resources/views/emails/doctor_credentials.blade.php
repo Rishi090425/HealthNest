@@ -5,7 +5,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; rounded-lg;">
-        <h2 style="color: #2563eb;">Welcome to Health Nest, Dr. {{ $name }}!</h2>
+        <h2 style="color: #2563eb;">Welcome to Health Nest, {{ $name }}!</h2>
         <p>Your professional account has been successfully created by the administrator. You can now log in to the portal using the following credentials:</p>
         
         <div style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #2563eb; margin: 20px 0;">

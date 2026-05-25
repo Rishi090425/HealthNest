@@ -48,7 +48,7 @@
                 <div class="text-xs text-gray-500">{{ $appt->appointment_date->format('M Y') }}</div>
             </div>
             <div class="flex-1">
-                <div class="text-sm font-medium text-gray-800">Dr. {{ $appt->doctor->user->name }}</div>
+                <div class="text-sm font-medium text-gray-800">{{ $appt->doctor->user->display_name }}</div>
                 <div class="text-xs text-gray-500">{{ $appt->doctor->specialization }} · {{ $appt->appointment_time }}</div>
                 @if($appt->reason)<div class="text-xs text-gray-400 mt-0.5 truncate">{{ $appt->reason }}</div>@endif
             </div>

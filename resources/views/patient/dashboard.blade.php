@@ -47,7 +47,7 @@
                             <p class="text-lg font-black text-primary-700 dark:text-primary-300">{{ $appt->appointment_date->format('d') }}</p>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-bold text-gray-900 dark:text-white truncate group-hover:text-blue-600 group-hover:underline">Dr. {{ $appt->doctor->user->name }}</p>
+                            <p class="text-sm font-bold text-gray-900 dark:text-white truncate group-hover:text-blue-600 group-hover:underline">{{ $appt->doctor->user->display_name }}</p>
                             <p class="text-xs text-gray-500">{{ $appt->appointment_time }} · {{ $appt->doctor->specialization }}</p>
                         </div>
                         <div class="shrink-0">
@@ -76,7 +76,7 @@
                     <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary-600 border-4 border-white dark:border-gray-800"></div>
                     <p class="text-xs text-gray-400 font-medium mb-1">{{ $appt->appointment_date->format('d M Y') }}</p>
                     <a href="{{ route('patient.appointments.index') }}" class="block group">
-                        <p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 group-hover:underline">Dr. {{ $appt->doctor->user->name }}</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 group-hover:underline">{{ $appt->doctor->user->display_name }}</p>
                     </a>
                     @if($appt->consultation)
                     <p class="text-xs text-gray-500 mt-1 leading-relaxed">{{ Str::limit($appt->consultation->notes, 100) }}</p>

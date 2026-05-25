@@ -88,7 +88,7 @@
                     </div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-100">Dr. {{ $appt->doctor->user->name }}</span>
+                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ $appt->doctor->user->display_name }}</span>
                             <span class="text-xs text-gray-400">{{ $appt->doctor->specialization }}</span>
                             <span class="text-xs font-medium px-2.5 py-0.5 rounded-full capitalize {{ $appt->status_badge }}">{{ $appt->status }}</span>
                             
